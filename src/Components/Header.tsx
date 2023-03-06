@@ -49,7 +49,7 @@ export default function Header() {
         </Logo>
         <Items>
           <Item>
-            <Link to="">Home</Link>
+            <Link to={`${baseURL}`}>Home</Link>
             {homeMatch && <Circle layoutId="link" />}
           </Item>
           <Item>

@@ -1,16 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useState } from "react";
+import { useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { getMovies, IGetMoviesResult } from "../api";
+import baseURL from "../BASEURL";
 import { makeImagePath } from "../utils";
 
 const offest = 5;
 export default function Home() {
+  const navigate = useNavigate();
   const nowPlaying = useQuery<IGetMoviesResult>(
     ["movies", "nowPlaying"],
     getMovies
   );
+  const modalMovieMatch = useMatch(`${baseURL}movies/:movieId`);
+  const { scrollY } = useScroll();
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving(prev => !prev);
@@ -23,13 +28,24 @@ export default function Home() {
       setIndex(prev => (prev === maxIndex ? 0 : prev + 1));
     }
   };
-  console.log(nowPlaying.data?.results[0]);
+  const onClickedBox = (movieId: number) => {
+    navigate(`movies/${movieId}`);
+  };
+  const onOverlayClick = () => {
+    navigate(-1);
+  };
+  const clickedMovie =
+    modalMovieMatch?.params.movieId &&
+    nowPlaying.data?.results.find(
+      movie => String(movie.id) === modalMovieMatch.params.movieId
+    );
+
   return (
-    <Wrapper>
+    <>
       {nowPlaying.isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
-        <>
+        <Wrapper>
           <Banner
             onClick={increaseIndex}
             bgphoto={makeImagePath(
@@ -50,6 +66,12 @@ export default function Home() {
                   .slice(offest * index, offest * index + offest)
                   .map(movie => (
                     <Box
+                      layoutId={String(movie.id)}
+                      onClick={() => onClickedBox(movie.id)}
+                      variants={boxVariants}
+                      initial="normal"
+                      whileHover="hover"
+                      transition={{ type: "tween" }}
                       bgphoto={makeImagePath(movie.backdrop_path, "w500")}
                       key={movie.id}>
                       {movie.title}
@@ -61,9 +83,35 @@ export default function Home() {
               </Row>
             </AnimatePresence>
           </Slider>
-        </>
+          <AnimatePresence>
+            {modalMovieMatch ? (
+              <>
+                <Overlay
+                  onClick={onOverlayClick}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                />
+                <ModalMovie
+                  scrolly={scrollY.get()}
+                  layoutId={modalMovieMatch.params.movieId}>
+                  {clickedMovie && (
+                    <>
+                      <ModalCover
+                        bgphoto={makeImagePath(clickedMovie.backdrop_path)}
+                      />
+                      <ModalContent>
+                        <h3>{clickedMovie.title}</h3>
+                        <p>{clickedMovie.overview}</p>
+                      </ModalContent>
+                    </>
+                  )}
+                </ModalMovie>
+              </>
+            ) : null}
+          </AnimatePresence>
+        </Wrapper>
       )}
-    </Wrapper>
+    </>
   );
 }
 
@@ -74,6 +122,20 @@ const infoVariants = {
       delay: 0.4,
       duaration: 0.2,
       type: "tween",
+    },
+  },
+};
+const boxVariants = {
+  nomarl: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -80,
+    transition: {
+      type: "tween",
+      delay: 0.4,
+      duration: 0.2,
     },
   },
 };
@@ -138,5 +200,43 @@ const Info = styled(motion.div)`
   h4 {
     text-align: center;
     font-size: 18px;
+  }
+`;
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+const ModalMovie = styled(motion.div)<{ scrolly: number }>`
+  position: absolute;
+  width: 55vw;
+  height: 88vh;
+  top: ${props => props.scrolly + 80}px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  border-radius: 15px;
+  background-color: ${props => props.theme.black.lighter};
+  overflow: hidden;
+`;
+const ModalCover = styled.div<{ bgphoto: string }>`
+  width: 100%;
+  height: 400px;
+  background-image: linear-gradient(to top, black, transparent),
+    url(${props => props.bgphoto});
+  background-size: cover;
+  background-position: center center;
+  border: none;
+`;
+const ModalContent = styled.div`
+  color: ${props => props.theme.white.lighter};
+  padding: 20px;
+  position: relative;
+  top: -70px;
+  h3 {
+    font-size: 46px;
   }
 `;
