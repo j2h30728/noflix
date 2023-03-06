@@ -3,7 +3,7 @@ import App from "./App";
 import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
-import baseURL from "./BASEURL";
+import baseURL from "./utils/baseURL";
 
 const router = createBrowserRouter([
   {
@@ -19,12 +19,22 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "tv",
+        path: "tvs",
+        element: <Tv />,
+      },
+      {
+        path: "tvs/:tvId",
         element: <Tv />,
       },
       {
         path: "search",
         element: <Search />,
+        children: [
+          {
+            path: "movies/:movieId",
+            element: <Search />,
+          },
+        ],
       },
     ],
   },

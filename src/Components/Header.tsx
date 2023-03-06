@@ -1,15 +1,22 @@
 import { motion, useAnimation, useScroll } from "framer-motion";
 import styled from "styled-components";
-import { useMatch } from "react-router-dom";
-import baseURL from "../BASEURL";
+import { useMatch, useNavigate } from "react-router-dom";
+import baseURL from "../utils/baseURL";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { ISearchForm } from "../types/types";
 
 export default function Header() {
   const homeMatch = useMatch(`${baseURL}`);
-  const tvMatch = useMatch(`${baseURL}tv`);
+  const tvMatch = useMatch(`${baseURL}tvs`);
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<ISearchForm>();
+  const handleSearch = ({ keyword }: ISearchForm) => {
+    navigate(`${baseURL}search?keyword=${keyword}`);
+  };
 
   const [searchOpen, setSearchOpen] = useState(false);
   const toggleSearch = () => {
@@ -34,6 +41,7 @@ export default function Header() {
       }
     });
   }, [scrollY, navAnimation]);
+
   return (
     <Nav variants={navVriants} animate={navAnimation} initial="top">
       <Col>
@@ -53,13 +61,13 @@ export default function Header() {
             {homeMatch && <Circle layoutId="link" />}
           </Item>
           <Item>
-            <Link to="tv">TV Shows</Link>
+            <Link to="tvs">TV Shows</Link>
             {tvMatch && <Circle layoutId="link" />}
           </Item>
         </Items>
       </Col>
       <Col>
-        <Search>
+        <Search onSubmit={handleSubmit(handleSearch)}>
           <motion.svg
             onClick={toggleSearch}
             animate={{ x: searchOpen ? -140 : 0 }}
@@ -73,6 +81,7 @@ export default function Header() {
               clipRule="evenodd"></path>
           </motion.svg>
           <Input
+            {...register("keyword", { required: true, minLength: 2 })}
             animate={inputAnimation}
             initial={{ scaleX: 0 }}
             transition={{ type: "linear" }}
@@ -111,6 +120,7 @@ const Nav = styled(motion.nav)`
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 30;
   width: 100%;
   top: 0;
   background-color: black;
@@ -148,7 +158,7 @@ const Item = styled.li`
   justify-content: center;
   flex-direction: column;
 `;
-const Search = styled.span`
+const Search = styled.form`
   color: white;
   display: flex;
   align-items: center;
