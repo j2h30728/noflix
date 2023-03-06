@@ -5,6 +5,7 @@ import { IModalMovieDetailProps } from "../../types/movie";
 import { makeImagePath } from "../../utils/makeImagePath";
 
 export default function ModalMovieDetailInfo({
+  movietype,
   movies,
   movieId,
   scrollY,
@@ -13,7 +14,7 @@ export default function ModalMovieDetailInfo({
   const handleOverlayClick = () => {
     navigate(-1);
   };
-  const clickedMovie = movies?.find(movie => String(movie.id) === movieId);
+  const clickedMovie = movies?.find(movie => movie.id + movietype === movieId);
   return (
     <>
       <Overlay

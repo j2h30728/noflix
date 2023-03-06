@@ -24,6 +24,7 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
       setIndex(prev => (prev === maxIndex ? 0 : prev + 1));
     }
   };
+  // console.log(type);
   const handleBoxClick = (movieId: number) => {
     if (type) setMovietype(type);
     navigate(`movies/${movieId}`);
@@ -40,7 +41,7 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
           {movies &&
             movies.slice(offest * index, offest * index + offest).map(movie => (
               <Box
-                layoutId={isMatchedModalMovie ? String(movie.id) : undefined}
+                layoutId={type && String(movie.id) + type}
                 onClick={() => handleBoxClick(movie.id)}
                 variants={boxVariants}
                 initial="normal"
@@ -141,13 +142,14 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     transform-origin: center right;
   }
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: center;
   span {
     opacity: 0.6;
-    font-weight: 900;
+    font-weight: 400;
     font-size: 430;
     color: whitesmoke;
+    margin-bottom: 20px;
   }
 `;
 const Info = styled(motion.div)`

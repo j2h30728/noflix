@@ -14,6 +14,7 @@ import {
 import { useRecoilValue } from "recoil";
 import { movieTypeState } from "../recoil/movie";
 import { movieType } from "../types/movie";
+import LatestMovie from "../components/Movie/LatestMovie";
 
 export default function Home() {
   const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
@@ -24,7 +25,7 @@ export default function Home() {
   const upComing = queryUpComingMovies();
   const topRated = queryTopRatedMovies();
   const movietype = useRecoilValue(movieTypeState);
-
+  console.log("modal", movieId + movietype);
   return (
     <>
       {nowPlaying.isLoading ? (
@@ -33,19 +34,19 @@ export default function Home() {
         <Wrapper>
           <Banner movies={nowPlaying.data?.results[0]} />
           <TopSliderWrapper>
-            <Title>nowPlaying</Title>
+            <Title>NOW PLAYING</Title>
             <MovieSlider
               type={movieType.now_playing}
               movies={nowPlaying.data?.results}
             />
           </TopSliderWrapper>
+          <LatestMovie
+            title={latest.data?.title}
+            overview={latest.data?.overview}
+            poster_path={latest.data?.poster_path}
+          />
           <SliderWrapper>
-            <Title>Latest</Title>
-            <h2>{latest.data?.title}</h2>
-            <p>{latest.data?.overview}</p>
-          </SliderWrapper>
-          <SliderWrapper>
-            <Title>Upcoming</Title>
+            <Title>UPCOMING</Title>
             <MovieSlider
               type={movieType.upcoming}
               movies={upComing.data?.results}
@@ -61,7 +62,8 @@ export default function Home() {
           <AnimatePresence>
             {isMatchedModalMovie ? (
               <ModalMovieDetailInfo
-                movieId={movieId}
+                movietype={movietype}
+                movieId={movieId + movietype}
                 movies={
                   movietype === movieType.now_playing
                     ? nowPlaying.data?.results
@@ -94,6 +96,7 @@ const Wrapper = styled.div`
 `;
 const TopSliderWrapper = styled.div`
   position: relative;
+  margin: 0 30px;
   top: -180px;
 `;
 const SliderWrapper = styled.div`
@@ -101,9 +104,11 @@ const SliderWrapper = styled.div`
   flex-direction: column;
   position: relative;
   height: 300px;
+  margin: 0 30px;
 `;
 const Title = styled.h2`
-  font-size: 40px;
+  font-size: 30px;
+  font-weight: 500;
 `;
 const TopRatedWrapper = styled.div`
   display: flex;

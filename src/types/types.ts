@@ -2,7 +2,6 @@ import { IMovie } from "./movie";
 import { ITv } from "./tv";
 
 export interface IVideo {
-  type: "movie";
   id: number;
   backdrop_path: string;
   poster_path: string;
@@ -22,10 +21,11 @@ export interface IGetVideos {
 }
 
 export interface IGeLatest {
-  id: number;
-  original_title: string;
-  overview: string;
-  status: string;
+  id?: number;
+  original_title?: string;
+  overview?: string;
+  status?: string;
+  poster_path?: string;
 }
 export interface IBannerProps {
   movies?: IMovie;

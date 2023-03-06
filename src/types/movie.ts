@@ -9,7 +9,7 @@ export interface IGetMovies extends IGetVideos {
 }
 
 export interface IGeLatesttMovie extends IGeLatest {
-  title: string;
+  title?: string;
 }
 export enum movieType {
   now_playing = "now_playing",
@@ -21,6 +21,7 @@ export interface IModalMovieDetailProps {
   movies?: IMovie[];
   movieId?: string;
   scrollY: number;
+  movietype: string;
 }
 export interface IMovieSliderProps {
   movies?: IMovie[];

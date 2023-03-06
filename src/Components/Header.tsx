@@ -32,7 +32,7 @@ export default function Header() {
 
   const { scrollY } = useScroll();
   useEffect(() => {
-    scrollY.onChange(() => {
+    scrollY.on("change", () => {
       if (scrollY.get() > 80) {
         //스크롤 내릴수록 scrollY 값 증가
         navAnimation.start("scroll");

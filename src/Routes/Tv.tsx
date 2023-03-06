@@ -22,6 +22,7 @@ export default function Tv() {
   const latest = queryLatestTvs();
   const topRated = queryTopRatedTvs();
   const tvtype = useRecoilValue(tvTypeState);
+  console.log(latest.data);
 
   return (
     <>
