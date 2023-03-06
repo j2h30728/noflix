@@ -31,6 +31,6 @@ export interface IBannerProps {
   movies?: IMovie;
   tvs?: ITv;
 }
-export interface IForm {
+export interface ISearchForm {
   keyword: string;
 }
