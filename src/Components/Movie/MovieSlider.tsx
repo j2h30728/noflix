@@ -1,66 +1,91 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/makeImagePath";
 import { useSetRecoilState } from "recoil";
 import { IMovieSliderProps } from "../../types/movie";
 import { movieTypeState } from "../../recoil/movie";
 
 export default function MovieSlider({ movies, type }: IMovieSliderProps) {
-  const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
   const offest = 5;
   const navigate = useNavigate();
   const setMovietype = useSetRecoilState(movieTypeState);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [isBack, setIsBack] = useState<Boolean>();
   const toggleLeaving = () => setLeaving(prev => !prev);
   const increaseIndex = () => {
     if (movies && movies.length > 0) {
       if (leaving) return;
       toggleLeaving();
+      setIsBack(false);
       const maxIndex = Math.floor(movies.length / offest) - 1;
-      setIndex(prev => (prev === maxIndex ? 0 : prev + 1));
+      setIndex(prev => (prev === maxIndex - 1 ? 0 : prev + 1));
     }
   };
-  // console.log(type);
+  const decreaseIndex = () => {
+    if (movies && movies.length > 0) {
+      if (leaving) return;
+      toggleLeaving();
+      setIsBack(true);
+      const maxIndex = Math.floor(movies.length / offest) - 1;
+      setIndex(prev => (prev === maxIndex - 1 ? 0 : prev + 1));
+    }
+  };
   const handleBoxClick = (movieId: number) => {
     if (type) setMovietype(type);
     navigate(`movies/${movieId}`);
   };
   return (
     <Wrrapper>
-      <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+      <AnimatePresence
+        custom={isBack}
+        initial={false}
+        onExitComplete={toggleLeaving}>
         <Row
-          initial={{ x: window.innerWidth + 5 }}
-          animate={{ x: 0 }}
-          exit={{ x: -window.innerWidth - 5 }}
+          custom={isBack}
+          initial="inital"
+          animate="center"
+          exit="exit"
+          variants={sliderVariants}
           transition={{ type: "tween", duration: 1 }}
           key={index}>
           {movies &&
-            movies.slice(offest * index, offest * index + offest).map(movie => (
-              <Box
-                layoutId={type && String(movie.id) + type}
-                onClick={() => handleBoxClick(movie.id)}
-                variants={boxVariants}
-                initial="normal"
-                whileHover="hover"
-                transition={{ type: "tween" }}
-                bgphoto={makeImagePath(movie.backdrop_path, "w500")}
-                key={movie.id}>
-                <motion.span variants={titleVariants}>
-                  {movie.title}
-                </motion.span>
-                <Info variants={infoVariants}>
-                  <h4>{movie.title}</h4>
-                </Info>
-              </Box>
-            ))}
+            movies
+              .slice(1)
+              .slice(offest * index, offest * index + offest)
+              .map(movie => (
+                <Box
+                  layoutId={type && String(movie.id) + type}
+                  onClick={() => handleBoxClick(movie.id)}
+                  variants={boxVariants}
+                  initial="normal"
+                  whileHover="hover"
+                  transition={{ type: "tween" }}
+                  bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                  key={movie.id}>
+                  <motion.span variants={titleVariants}>
+                    {movie.title}
+                  </motion.span>
+                  <Info variants={infoVariants}>
+                    <h4>{movie.title}</h4>
+                  </Info>
+                </Box>
+              ))}
         </Row>
+        <LARR
+          onClick={decreaseIndex}
+          variants={arrowVariants}
+          initial="normal"
+          whileHover="hover"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512">
+          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+        </LARR>
         <RARR
           onClick={increaseIndex}
-          variants={rarrVariants}
+          variants={arrowVariants}
           initial="normal"
           whileHover="hover"
           xmlns="http://www.w3.org/2000/svg"
@@ -71,6 +96,15 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
     </Wrrapper>
   );
 }
+const sliderVariants = {
+  inital: (isBack: boolean) => ({
+    x: !isBack ? window.innerWidth + 5 : -window.innerWidth - 5,
+  }),
+  center: { x: 0 },
+  exit: (isBack: boolean) => ({
+    x: !isBack ? -window.innerWidth - 5 : window.innerWidth + 5,
+  }),
+};
 const boxVariants = {
   normal: {
     scale: 1,
@@ -100,7 +134,7 @@ const titleVariants = {
     opacity: 0,
   },
 };
-const rarrVariants = {
+const arrowVariants = {
   normal: {
     scale: 1,
     opacity: 0.2,
@@ -172,7 +206,21 @@ const RARR = styled(motion.svg)`
   opacity: 0.1;
   width: 50px;
   height: 80px;
-  right: 0;
+  right: 5px;
+  margin: auto;
+  top: 48px;
+  transform-origin: right center;
+  cursor: pointer;
+`;
+const LARR = styled(motion.svg)`
+  position: absolute;
+  z-index: 10;
+  background-color: none;
+  fill: ${props => props.theme.white.darker};
+  opacity: 0.1;
+  width: 50px;
+  height: 80px;
+  left: 5px;
   margin: auto;
   top: 48px;
   transform-origin: right center;

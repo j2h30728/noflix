@@ -3,11 +3,14 @@ import styled from "styled-components";
 import { IBannerProps } from "../types/types";
 import { makeImagePath } from "../utils/makeImagePath";
 import { useNavigate } from "react-router-dom";
+import baseURL from "../utils/baseURL";
 
 export default function Banner({ movies, tvs }: IBannerProps) {
   const navigate = useNavigate();
-  const handleBoxClick = (movieId: number) => {
-    navigate(`movies/${movieId}`);
+  const handleBoxClick = (videoId: number) => {
+    movies
+      ? navigate(`${baseURL}movies/${videoId}`)
+      : navigate(`${baseURL}tvs/${videoId}`);
   };
 
   return (

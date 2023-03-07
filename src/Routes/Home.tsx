@@ -25,7 +25,6 @@ export default function Home() {
   const upComing = queryUpComingMovies();
   const topRated = queryTopRatedMovies();
   const movietype = useRecoilValue(movieTypeState);
-  console.log("modal", movieId + movietype);
   return (
     <>
       {nowPlaying.isLoading ? (

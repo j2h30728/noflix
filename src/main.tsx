@@ -9,7 +9,6 @@ import { theme } from "./styles/theme";
 import GlobalStyle from "./styles/GlobalStyle";
 
 const client = new QueryClient();
-console.log(import.meta.env.BASE_URL);
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement

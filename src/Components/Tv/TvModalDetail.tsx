@@ -5,6 +5,7 @@ import { ITvModalDetailProps } from "../../types/tv";
 import { makeImagePath } from "../../utils/makeImagePath";
 
 export default function TvModalDetail({
+  tvtype,
   tvs,
   tvId,
   scrollY,
@@ -13,7 +14,7 @@ export default function TvModalDetail({
   const handleOverlayClick = () => {
     navigate(-1);
   };
-  const clickedTv = tvs?.find(tv => String(tv.id) === tvId);
+  const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId);
   return (
     <>
       <Overlay

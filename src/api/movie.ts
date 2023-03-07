@@ -11,7 +11,6 @@ export async function getTvs(type: tvType) {
   const response = await fetch(`${BASE_PATH}/tv/${type}?api_key=${API_KEY}`);
   return await response.json();
 }
-
 export async function searchMovies(keyword: string | null) {
   const response = await fetch(
     `${BASE_PATH}/search/movie?api_key=${API_KEY}&query=${keyword}`

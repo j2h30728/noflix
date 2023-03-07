@@ -24,4 +24,5 @@ export interface ITvModalDetailProps {
   tvs?: ITv[];
   tvId?: string;
   scrollY: number;
+  tvtype: string;
 }

@@ -10,9 +10,9 @@ import {
 } from "../queries/tvs";
 import { useRecoilValue } from "recoil";
 import { tvTypeState } from "../recoil/tv";
-import TvModal from "../components/Tv/TvModalDetail";
 import { tvType } from "../types/tv";
 import TvSlider from "../components/Tv/TvSlider";
+import TvModalDetail from "../components/Tv/TvModalDetail";
 
 export default function Tv() {
   const modalMovieMatch = useMatch(`${baseURL}tvs/:tvId`);
@@ -22,8 +22,6 @@ export default function Tv() {
   const latest = queryLatestTvs();
   const topRated = queryTopRatedTvs();
   const tvtype = useRecoilValue(tvTypeState);
-  console.log(latest.data);
-
   return (
     <>
       {airingTody.isLoading ? (
@@ -49,8 +47,9 @@ export default function Tv() {
           </TopRatedWrapper>
           <AnimatePresence>
             {modalMovieMatch ? (
-              <TvModal
-                tvId={tvId}
+              <TvModalDetail
+                tvtype={tvtype}
+                tvId={tvId + tvtype}
                 tvs={
                   tvtype === tvType.airing_today
                     ? airingTody.data?.results
