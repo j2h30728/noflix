@@ -14,7 +14,9 @@ export default function ModalMovieDetailInfo({
   const handleOverlayClick = () => {
     navigate(-1);
   };
+  console.log(movietype);
   const clickedMovie = movies?.find(movie => movie.id + movietype === movieId);
+
   return (
     <>
       <Overlay

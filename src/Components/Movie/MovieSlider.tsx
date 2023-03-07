@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { makeImagePath } from "../../utils/makeImagePath";
 import { useSetRecoilState } from "recoil";
 import { IMovieSliderProps } from "../../types/movie";
-import { movieTypeState } from "../../recoil/movie";
+import { movieTypeState } from "../../recoil/atoms";
 
 export default function MovieSlider({ movies, type }: IMovieSliderProps) {
   const offest = 5;
@@ -164,10 +164,13 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: ${props => props.theme.black.lighter};
   color: red;
   height: 180px;
+  width: 100%;
   font-size: 30px;
+  box-sizing: border-box;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
   background-position: center center;
+  position: relative;
   cursor: pointer;
   &:first-child {
     transform-origin: center left;

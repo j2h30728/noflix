@@ -1,30 +1,29 @@
-import { motion } from "framer-motion";
-import styled from "styled-components";
-import { IBannerProps } from "../types/types";
-import { makeImagePath } from "../utils/makeImagePath";
 import { useNavigate } from "react-router-dom";
-import baseURL from "../utils/baseURL";
+import { tvTypeState } from "../../recoil/atoms";
+import { IBannerProps } from "../../types/types";
+import { useRecoilState } from "recoil";
+import { tvType } from "../../types/tv";
+import baseURL from "../../utils/baseURL";
+import { makeImagePath } from "../../utils/makeImagePath";
+import styled from "styled-components";
+import { motion } from "framer-motion";
 
-export default function Banner({ movies, tvs }: IBannerProps) {
+export default function TvBanner({ tvs }: IBannerProps) {
   const navigate = useNavigate();
+  const [bannerTvType, setBannerTvType] = useRecoilState(tvTypeState);
   const handleBoxClick = (videoId: number) => {
-    movies
-      ? navigate(`${baseURL}movies/${videoId}`)
-      : navigate(`${baseURL}tvs/${videoId}`);
+    setBannerTvType(tvType.airing_today);
+    navigate(`${baseURL}tvs/${videoId}`);
   };
-
   return (
-    <Container
-      bgphoto={makeImagePath(
-        `${movies?.backdrop_path || tvs?.backdrop_path || ""}`
-      )}>
+    <Container bgphoto={makeImagePath(`${tvs?.backdrop_path || ""}`)}>
       <InfoBtn
-        layoutId={String(movies?.id)}
-        onClick={() => handleBoxClick(movies?.id || tvs?.id || 0)}>
+        layoutId={String(tvs?.id) + bannerTvType}
+        onClick={() => handleBoxClick(tvs?.id || 0)}>
         More info
       </InfoBtn>
-      <Title>{movies?.title || tvs?.name}</Title>
-      <Overview>{movies?.overview || tvs?.overview}</Overview>
+      <Title>{tvs?.name}</Title>
+      <Overview>{tvs?.overview}</Overview>
     </Container>
   );
 }

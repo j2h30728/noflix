@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../../utils/makeImagePath";
 import { useSetRecoilState } from "recoil";
-import { tvTypeState } from "../../recoil/tv";
+import { tvTypeState } from "../../recoil/atoms";
 import { ITvSlider } from "../../types/tv";
 
 export default function TvSlider({ tvs, type }: ITvSlider) {
@@ -163,9 +163,11 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   color: red;
   height: 180px;
   font-size: 30px;
+  width: 100%;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
   background-position: center center;
+  position: relative;
   cursor: pointer;
   &:first-child {
     transform-origin: center left;
@@ -189,6 +191,7 @@ const Info = styled(motion.div)`
   opacity: 0;
   position: absolute;
   width: 100%;
+  box-sizing: border-box;
   bottom: 0;
   h4 {
     text-align: center;

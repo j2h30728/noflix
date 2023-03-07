@@ -2,17 +2,17 @@ import { AnimatePresence, useScroll } from "framer-motion";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import baseURL from "../utils/baseURL";
-import Banner from "../components/Banner";
 import {
   queryLatestTvs,
   queryAiringTodayTvs,
   queryTopRatedTvs,
 } from "../queries/tvs";
 import { useRecoilValue } from "recoil";
-import { tvTypeState } from "../recoil/tv";
+import { tvTypeState } from "../recoil/atoms";
 import { tvType } from "../types/tv";
 import TvSlider from "../components/Tv/TvSlider";
 import TvModalDetail from "../components/Tv/TvModalDetail";
+import TvBanner from "../components/Tv/TvBanner";
 
 export default function Tv() {
   const modalMovieMatch = useMatch(`${baseURL}tvs/:tvId`);
@@ -28,7 +28,7 @@ export default function Tv() {
         <Loader>Loading...</Loader>
       ) : (
         <Wrapper>
-          <Banner tvs={airingTody.data?.results[0]} />
+          <TvBanner tvs={airingTody.data?.results[0]} />
           <TopSliderWrapper>
             <Title>airing_today</Title>
             <TvSlider
