@@ -2,10 +2,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { makeImagePath } from "../../utils/makeImagePath";
+import { makeImagePath } from "../../utils/apiUtils";
 import { useSetRecoilState } from "recoil";
 import { IMovieSliderProps } from "../../types/movie";
 import { movieTypeState } from "../../recoil/atoms";
+import { queryGenresOfMovies } from "../../queries/movies";
 
 export default function MovieSlider({ movies, type }: IMovieSliderProps) {
   const offest = 5;
@@ -36,6 +37,14 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
   const handleBoxClick = (movieId: number) => {
     if (type) setMovietype(type);
     navigate(`movies/${movieId}`);
+  };
+
+  const genresOfMovies = queryGenresOfMovies();
+  const genres = genresOfMovies.data?.genres;
+  const checkGen = (arr: number[]) => {
+    return arr
+      .map(x => genres?.find(genre => genre.id === x))
+      .map(genre => genre?.name);
   };
   return (
     <Wrrapper>
@@ -70,29 +79,38 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
                   </motion.span>
                   <Info variants={infoVariants}>
                     <h4>{movie.title}</h4>
+                    <InfoData>
+                      <p>{movie.release_date}</p>
+                      <p>⭐️{movie.vote_average}</p>
+                      <Genres>
+                        {checkGen(movie.genre_ids).map((genre, idx) => (
+                          <li key={idx}>{genre}</li>
+                        ))}
+                      </Genres>
+                    </InfoData>
                   </Info>
                 </Box>
               ))}
         </Row>
-        <LARR
-          onClick={decreaseIndex}
-          variants={arrowVariants}
-          initial="normal"
-          whileHover="hover"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512">
-          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-        </LARR>
-        <RARR
-          onClick={increaseIndex}
-          variants={arrowVariants}
-          initial="normal"
-          whileHover="hover"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512">
-          <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-        </RARR>
       </AnimatePresence>
+      <LARR
+        onClick={decreaseIndex}
+        variants={arrowVariants}
+        initial="normal"
+        whileHover="hover"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512">
+        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+      </LARR>
+      <RARR
+        onClick={increaseIndex}
+        variants={arrowVariants}
+        initial="normal"
+        whileHover="hover"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512">
+        <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+      </RARR>
     </Wrrapper>
   );
 }
@@ -110,6 +128,7 @@ const boxVariants = {
     scale: 1,
   },
   hover: {
+    zIndex: 10,
     scale: 1.3,
     y: -80,
     transition: {
@@ -162,11 +181,10 @@ const Row = styled(motion.div)`
 `;
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: ${props => props.theme.black.lighter};
-  color: red;
   height: 180px;
   width: 100%;
   font-size: 30px;
-  box-sizing: border-box;
+  border-radius: 3px;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
   background-position: center center;
@@ -195,10 +213,36 @@ const Info = styled(motion.div)`
   opacity: 0;
   position: absolute;
   width: 100%;
+  height: 110px;
   bottom: 0;
+  bottom: -80px;
+  font-size: 13px;
+  border-radius: 3px;
   h4 {
-    text-align: center;
+    text-align: start;
     font-size: 18px;
+    font-weight: 400;
+    margin: 4px 0;
+    border-bottom: 1px solid white;
+  }
+`;
+const InfoData = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2x;
+  height: 100%;
+  text-align: end;
+`;
+const Genres = styled.ul`
+  display: flex;
+  li {
+    font-size: 10px;
+    background-color: #352727;
+    margin-right: 3px;
+    padding: 1px;
+    color: whitesmoke;
+    border-radius: 3px;
+    font-weight: 300;
   }
 `;
 const RARR = styled(motion.svg)`

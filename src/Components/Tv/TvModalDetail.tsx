@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { ITvModalDetailProps } from "../../types/tv";
-import { makeImagePath } from "../../utils/makeImagePath";
+import { makeImagePath } from "../../utils/apiUtils";
 
 export default function TvModalDetail({
   tvtype,
@@ -15,6 +15,7 @@ export default function TvModalDetail({
     navigate(-1);
   };
   const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId);
+
   return (
     <>
       <Overlay

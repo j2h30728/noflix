@@ -2,10 +2,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { makeImagePath } from "../../utils/makeImagePath";
 import { useSetRecoilState } from "recoil";
 import { tvTypeState } from "../../recoil/atoms";
 import { ITvSlider } from "../../types/tv";
+import { makeImagePath } from "../../utils/apiUtils";
 
 export default function TvSlider({ tvs, type }: ITvSlider) {
   const offest = 5;
@@ -72,25 +72,25 @@ export default function TvSlider({ tvs, type }: ITvSlider) {
                 </Box>
               ))}
         </Row>
-        <LARR
-          onClick={decreaseIndex}
-          variants={arrowVariants}
-          initial="normal"
-          whileHover="hover"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512">
-          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-        </LARR>
-        <RARR
-          onClick={increaseIndex}
-          variants={arrowVariants}
-          initial="normal"
-          whileHover="hover"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 448 512">
-          <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-        </RARR>
       </AnimatePresence>
+      <LARR
+        onClick={decreaseIndex}
+        variants={arrowVariants}
+        initial="normal"
+        whileHover="hover"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512">
+        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+      </LARR>
+      <RARR
+        onClick={increaseIndex}
+        variants={arrowVariants}
+        initial="normal"
+        whileHover="hover"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 448 512">
+        <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+      </RARR>
     </Wrrapper>
   );
 }
@@ -108,8 +108,9 @@ const boxVariants = {
     scale: 1,
   },
   hover: {
+    zIndex: 10,
     scale: 1.3,
-    y: -80,
+    y: -40,
     transition: {
       type: "tween",
       delay: 0.4,

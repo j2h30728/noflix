@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import baseURL from "../../utils/baseURL";
-import { makeImagePath } from "../../utils/makeImagePath";
+import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { IBannerProps } from "../../types/types";

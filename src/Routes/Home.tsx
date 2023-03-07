@@ -30,7 +30,7 @@ export default function Home() {
       {nowPlaying.isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
-        <Wrapper>
+        <Container>
           <MovieBanner movies={nowPlaying.data?.results[0]} />
           <TopSliderWrapper>
             <Title>NOW PLAYING</Title>
@@ -62,7 +62,7 @@ export default function Home() {
             {isMatchedModalMovie ? (
               <ModalMovieDetailInfo
                 movietype={movietype}
-                movieId={movieId + movietype}
+                movieId={movieId}
                 movies={
                   movietype === movieType.now_playing
                     ? nowPlaying.data?.results
@@ -76,7 +76,7 @@ export default function Home() {
               />
             ) : null}
           </AnimatePresence>
-        </Wrapper>
+        </Container>
       )}
     </>
   );
@@ -87,7 +87,7 @@ const Loader = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Wrapper = styled.div`
+const Container = styled.div`
   background-color: black;
   padding-bottom: 200px;
   display: flex;

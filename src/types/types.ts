@@ -8,6 +8,10 @@ export interface IVideo {
   overview: string;
   popularity: number;
   release_date: string;
+  vote_average: number;
+  genre_ids: number[];
+  vote_count: number;
+  adult: boolean;
 }
 
 export interface IGetVideos {
@@ -33,4 +37,11 @@ export interface IBannerProps {
 }
 export interface ISearchForm {
   keyword: string;
+}
+export interface IGenres {
+  id: number;
+  name: string;
+}
+export interface IGetGenres {
+  genres: IGenres[];
 }

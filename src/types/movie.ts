@@ -2,6 +2,7 @@ import { IGeLatest, IGetVideos, IVideo } from "./types";
 
 export interface IMovie extends IVideo {
   title: string;
+  original_title: string;
 }
 
 export interface IGetMovies extends IGetVideos {
@@ -19,9 +20,9 @@ export enum movieType {
 }
 export interface IModalMovieDetailProps {
   movies?: IMovie[];
-  movieId?: string;
   scrollY: number;
   movietype: string;
+  movieId?: string;
 }
 export interface IMovieSliderProps {
   movies?: IMovie[];

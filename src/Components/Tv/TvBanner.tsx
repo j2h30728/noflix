@@ -4,7 +4,7 @@ import { IBannerProps } from "../../types/types";
 import { useRecoilState } from "recoil";
 import { tvType } from "../../types/tv";
 import baseURL from "../../utils/baseURL";
-import { makeImagePath } from "../../utils/makeImagePath";
+import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
 import { motion } from "framer-motion";
 

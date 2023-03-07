@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { getMovies, searchMovies } from "../api/movie";
+import { getGenresOfMovies, getMovies, searchMovies } from "../api/movie";
 import { IGeLatesttMovie, IGetMovies, movieType } from "../types/movie";
+import { IGetGenres } from "../types/types";
 
 export function queryNowPlayingMovies() {
   return useQuery<IGetMovies>(["movies", movieType.now_playing], () =>
@@ -26,4 +27,7 @@ export function querySearchedMovies(keyword: string | null) {
   return useQuery<IGetMovies>(["searchedMovies", keyword], () =>
     searchMovies(keyword)
   );
+}
+export function queryGenresOfMovies() {
+  return useQuery<IGetGenres>(["generesMovie"], getGenresOfMovies);
 }

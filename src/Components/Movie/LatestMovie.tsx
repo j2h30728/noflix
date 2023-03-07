@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { IGeLatesttMovie } from "../../types/movie";
-import { makeImagePath } from "../../utils/makeImagePath";
+import { makeImagePath } from "../../utils/apiUtils";
 
 export default function LatestMovie({
   title,
@@ -23,8 +23,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: space-around;
   align-items: flex-end;
-  height: 200px;
-  margin: 0 30px;
+  margin: 10px 30px 20px 30px;
   text-align: end;
   h3 {
     font-size: 30px;
@@ -32,7 +31,7 @@ const Wrapper = styled.div`
   }
   p {
     font-size: 20px;
-    width: 50vw;
+    width: 80vw;
   }
 `;
 const Title = styled.h2`
