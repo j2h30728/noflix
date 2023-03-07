@@ -13,6 +13,7 @@ import { tvType } from "../types/tv";
 import TvSlider from "../components/Tv/TvSlider";
 import TvModalDetail from "../components/Tv/TvModalDetail";
 import TvBanner from "../components/Tv/TvBanner";
+import LatestTv from "../components/Tv/LatestTv";
 
 export default function Tv() {
   const modalMovieMatch = useMatch(`${baseURL}tvs/:tvId`);
@@ -36,15 +37,15 @@ export default function Tv() {
               tvs={airingTody.data?.results}
             />
           </TopSliderWrapper>
+          <LatestTv
+            name={latest.data?.name}
+            overview={latest.data?.name}
+            poster_path={latest.data?.overview}
+          />
           <SliderWrapper>
-            <Title>Latest</Title>
-            <h2>{latest.data?.name}</h2>
-            <p>{latest.data?.overview}</p>
-          </SliderWrapper>
-          <TopRatedWrapper>
             <Title>TopRated</Title>
             <TvSlider type={tvType.top_rated} tvs={topRated.data?.results} />
-          </TopRatedWrapper>
+          </SliderWrapper>
           <AnimatePresence>
             {modalMovieMatch ? (
               <TvModalDetail
@@ -80,6 +81,7 @@ const Wrapper = styled.div`
 `;
 const TopSliderWrapper = styled.div`
   position: relative;
+  margin: 0 30px;
   top: -180px;
 `;
 const SliderWrapper = styled.div`
@@ -87,13 +89,9 @@ const SliderWrapper = styled.div`
   flex-direction: column;
   position: relative;
   height: 300px;
+  margin: 0 30px;
 `;
 const Title = styled.h2`
-  font-size: 40px;
-`;
-const TopRatedWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: 500px;
+  font-size: 30px;
+  font-weight: 500;
 `;

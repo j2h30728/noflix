@@ -6,6 +6,7 @@ import { useSetRecoilState } from "recoil";
 import { tvTypeState } from "../../recoil/atoms";
 import { ITvSlider } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
+import { queryGenresOfTvs } from "../../queries/tvs";
 
 export default function TvSlider({ tvs, type }: ITvSlider) {
   const offest = 5;
@@ -36,6 +37,13 @@ export default function TvSlider({ tvs, type }: ITvSlider) {
   const handleBoxClick = (tvId: number) => {
     if (type) setTvtype(type);
     navigate(`${tvId}`);
+  };
+  const genresOfTvs = queryGenresOfTvs();
+  const genres = genresOfTvs.data?.genres;
+  const checkGen = (arr: number[]) => {
+    return arr
+      .map(x => genres?.find(genre => genre.id === x))
+      .map(genre => genre?.name);
   };
   return (
     <Wrrapper>
@@ -68,6 +76,15 @@ export default function TvSlider({ tvs, type }: ITvSlider) {
                   <motion.span variants={titleVariants}>{tv.name}</motion.span>
                   <Info variants={infoVariants}>
                     <h4>{tv.name}</h4>
+                    <InfoData>
+                      <p>{tv.release_date}</p>
+                      <p>⭐️{tv.vote_average}</p>
+                      <Genres>
+                        {checkGen(tv.genre_ids).map((genre, idx) => (
+                          <li key={idx}>{genre}</li>
+                        ))}
+                      </Genres>
+                    </InfoData>
                   </Info>
                 </Box>
               ))}
@@ -110,7 +127,7 @@ const boxVariants = {
   hover: {
     zIndex: 10,
     scale: 1.3,
-    y: -40,
+    y: -80,
     transition: {
       type: "tween",
       delay: 0.4,
@@ -161,10 +178,10 @@ const Row = styled(motion.div)`
 `;
 const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: ${props => props.theme.black.lighter};
-  color: red;
   height: 180px;
-  font-size: 30px;
   width: 100%;
+  font-size: 30px;
+  border-radius: 3px;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
   background-position: center center;
@@ -177,13 +194,14 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
     transform-origin: center right;
   }
   display: flex;
-  align-items: center;
+  align-items: end;
   justify-content: center;
   span {
     opacity: 0.6;
-    font-weight: 900;
+    font-weight: 400;
     font-size: 430;
     color: whitesmoke;
+    margin-bottom: 20px;
   }
 `;
 const Info = styled(motion.div)`
@@ -192,11 +210,36 @@ const Info = styled(motion.div)`
   opacity: 0;
   position: absolute;
   width: 100%;
-  box-sizing: border-box;
+  height: 110px;
   bottom: 0;
+  bottom: -80px;
+  font-size: 13px;
+  border-radius: 3px;
   h4 {
-    text-align: center;
+    text-align: start;
     font-size: 18px;
+    font-weight: 400;
+    margin: 4px 0;
+    border-bottom: 1px solid white;
+  }
+`;
+const InfoData = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2x;
+  height: 100%;
+  text-align: end;
+`;
+const Genres = styled.ul`
+  display: flex;
+  li {
+    font-size: 10px;
+    background-color: #352727;
+    margin-right: 3px;
+    padding: 1px;
+    color: whitesmoke;
+    border-radius: 3px;
+    font-weight: 300;
   }
 `;
 const RARR = styled(motion.svg)`

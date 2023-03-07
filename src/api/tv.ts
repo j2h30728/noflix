@@ -12,9 +12,10 @@ export async function searchTvs(keyword: string | null) {
   );
   return await response.json();
 }
-export async function getGeneresOfMovies() {
+export async function getGenresOfTvs() {
   const reponse = await fetch(
-    `${BASE_PATH}/genre/movie/List?api_key=${API_KEY}`
+    `${BASE_PATH}/genre/tv/list?api_key=${API_KEY}
+`
   );
   return await reponse.json();
 }

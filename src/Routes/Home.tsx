@@ -51,13 +51,13 @@ export default function Home() {
               movies={upComing.data?.results}
             />
           </SliderWrapper>
-          <TopRatedWrapper>
+          <SliderWrapper>
             <Title>TopRated</Title>
             <MovieSlider
               type={movieType.top_rated}
               movies={topRated.data?.results}
             />
-          </TopRatedWrapper>
+          </SliderWrapper>
           <AnimatePresence>
             {isMatchedModalMovie ? (
               <ModalMovieDetailInfo
@@ -108,10 +108,4 @@ const SliderWrapper = styled.div`
 const Title = styled.h2`
   font-size: 30px;
   font-weight: 500;
-`;
-const TopRatedWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  height: 500px;
 `;

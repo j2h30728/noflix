@@ -18,7 +18,6 @@ export default function ModalMovieDetailInfo({
   const clickedMovie = movies?.find(
     movie => movie.id + movietype === movieId + movietype
   );
-  console.log(clickedMovie);
 
   const genresOfMovies = queryGenresOfMovies();
   const genres = genresOfMovies.data?.genres;
@@ -34,7 +33,7 @@ export default function ModalMovieDetailInfo({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <ModalMovie style={{ top: scrollY + 100 }} layoutId={movieId + movietype}>
+      <Modal style={{ top: scrollY + 100 }} layoutId={movieId + movietype}>
         {clickedMovie && (
           <>
             <ModalCover
@@ -75,7 +74,7 @@ export default function ModalMovieDetailInfo({
             </ModalContent>
           </>
         )}
-      </ModalMovie>
+      </Modal>
     </>
   );
 }
@@ -87,7 +86,7 @@ const Overlay = styled(motion.div)`
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
 `;
-const ModalMovie = styled(motion.div)`
+const Modal = styled(motion.div)`
   position: absolute;
   width: 55vw;
   height: 80vh;

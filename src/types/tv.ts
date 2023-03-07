@@ -2,6 +2,7 @@ import { IGeLatest, IGetVideos, IVideo } from "./types";
 
 export interface ITv extends IVideo {
   name: string;
+  original_name: string;
 }
 
 export interface IGetTvs extends IGetVideos {
@@ -9,7 +10,7 @@ export interface IGetTvs extends IGetVideos {
 }
 
 export interface IGeLatesttTv extends IGeLatest {
-  name: string;
+  name?: string;
 }
 export enum tvType {
   airing_today = "airing_today",
