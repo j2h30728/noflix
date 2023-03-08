@@ -2,8 +2,8 @@ import { AnimatePresence, useScroll } from "framer-motion";
 import { useMatch } from "react-router-dom";
 import styled from "styled-components";
 import baseURL from "../utils/baseURL";
-import ModalMovieDetailInfo from "../components/Movie/ModalMovieDetailInfo";
-import MovieSlider from "../components/Movie/MovieSlider";
+import ModalMovieDetailInfo from "../components/movie/ModalMovieDetailInfo";
+import MovieSlider from "../components/movie/MovieSlider";
 import {
   queryLatestMovie,
   queryNowPlayingMovies,
@@ -13,8 +13,8 @@ import {
 import { useRecoilValue } from "recoil";
 import { movieTypeState } from "../recoil/atoms";
 import { movieType } from "../types/movie";
-import LatestMovie from "../components/Movie/LatestMovie";
-import MovieBanner from "../components/Movie/MovieBanner";
+import LatestMovie from "../components/movie/LatestMovie";
+import MovieBanner from "../components/movie/MovieBanner";
 
 export default function Home() {
   const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
@@ -25,6 +25,7 @@ export default function Home() {
   const upComing = queryUpComingMovies();
   const topRated = queryTopRatedMovies();
   const movietype = useRecoilValue(movieTypeState);
+
   return (
     <>
       {nowPlaying.isLoading ? (

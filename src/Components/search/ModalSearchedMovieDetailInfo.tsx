@@ -1,28 +1,50 @@
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { queryGenresOfTvs } from "../../queries/tvs";
-import { ITvModalDetailProps } from "../../types/tv";
+import { useRecoilState } from "recoil";
+import {
+  isSearchedModalOpenState,
+  searchedVideoIdState,
+} from "../../recoil/atoms";
+import { IModalMovieDetailProps } from "../../types/movie";
 import { makeImagePath } from "../../utils/apiUtils";
+import { queryGenresOfMovies } from "../../queries/movies";
+import { SeachedVideoType } from "../../types/types";
 
-export default function TvModalDetail({
-  tvtype,
-  tvs,
-  tvId,
+export default function ModalSearchedMovieDetailInfo({
+  movietype,
+  movies,
+  movieId,
   scrollY,
-}: ITvModalDetailProps) {
-  const navigate = useNavigate();
+}: IModalMovieDetailProps) {
+  const [searchedVideoId, setSearchedVideoId] =
+    useRecoilState(searchedVideoIdState);
+  const [isSearchedModalOpen, setIsSearchedModalOpen] = useRecoilState(
+    isSearchedModalOpenState
+  );
   const handleOverlayClick = () => {
-    navigate(-1);
+    if (searchedVideoId) {
+      setSearchedVideoId(prev => ({
+        ...prev,
+        id: "",
+        type: SeachedVideoType.default,
+      }));
+    }
+    if (isSearchedModalOpen) {
+      setIsSearchedModalOpen(false);
+    }
   };
-  const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId);
-  const genresOfTvs = queryGenresOfTvs();
-  const genres = genresOfTvs.data?.genres;
+  const clickedMovie = movies?.find(
+    movie => movie.id + movietype === movieId + movietype
+  );
+  const genresOfMovies = queryGenresOfMovies();
+  const genres = genresOfMovies.data?.genres;
   const checkGen = (arr: number[]) => {
     return arr
       .map(x => genres?.find(genre => genre.id === x))
       .map(genre => genre?.name);
   };
+
   return (
     <>
       <Overlay
@@ -30,43 +52,43 @@ export default function TvModalDetail({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <Modal style={{ top: scrollY + 100 }} layoutId={tvId}>
-        {clickedTv && (
+      <Modal style={{ top: scrollY + 100 }} layoutId={movieId + movietype}>
+        {clickedMovie && (
           <>
             <ModalCover
-              bgphoto={makeImagePath(clickedTv.backdrop_path, "w500")}>
+              bgphoto={makeImagePath(clickedMovie.backdrop_path, "w500")}>
               <MovieTitle>
-                {clickedTv.name} <span>{clickedTv.original_name}</span>
+                {clickedMovie.title} <span>{clickedMovie.original_title}</span>
               </MovieTitle>
             </ModalCover>
             <ModalContent>
               <ContentWrapper>
                 <div>GENRES</div>
                 <Genres>
-                  {checkGen(clickedTv.genre_ids).map((genres, idx) => (
+                  {checkGen(clickedMovie.genre_ids).map((genres, idx) => (
                     <li key={idx}>{genres}</li>
                   ))}
                 </Genres>
               </ContentWrapper>
               <ContentWrapper>
                 <div> IS AUDULT </div>
-                <p>{clickedTv.adult ? "only adult" : "all"}</p>
+                <p>{clickedMovie.adult ? "only adult" : "all"}</p>
               </ContentWrapper>
               <ContentWrapper>
                 <div> RELEASE DATA</div>
-                <p>{clickedTv.release_date}</p>
+                <p>{clickedMovie.release_date}</p>
               </ContentWrapper>
               <ContentWrapper>
                 <div> VOTE AVERAGE</div>
-                <p>{clickedTv.vote_average}</p>
+                <p>{clickedMovie.vote_average}</p>
               </ContentWrapper>
               <ContentWrapper>
                 <div> VOTE COUNT</div>
-                <p>{clickedTv.vote_count}</p>
+                <p>{clickedMovie.vote_count}</p>
               </ContentWrapper>
               <ContentWrapper>
                 <div> OVERVIEW</div>
-                <p>{clickedTv.overview}</p>
+                <p>{clickedMovie.overview}</p>
               </ContentWrapper>
             </ModalContent>
           </>

@@ -4,6 +4,9 @@ import styled from "styled-components";
 import { queryGenresOfMovies } from "../../queries/movies";
 import { IModalMovieDetailProps } from "../../types/movie";
 import { makeImagePath } from "../../utils/apiUtils";
+import { useRecoilState } from "recoil";
+import { searchedVideoIdState } from "../../recoil/atoms";
+import { SeachedVideoType } from "../../types/types";
 
 export default function ModalMovieDetailInfo({
   movietype,
@@ -12,7 +15,16 @@ export default function ModalMovieDetailInfo({
   scrollY,
 }: IModalMovieDetailProps) {
   const navigate = useNavigate();
+  const [searchedVideoId, setSearchedVideoId] =
+    useRecoilState(searchedVideoIdState);
   const handleOverlayClick = () => {
+    if (searchedVideoId.type) {
+      setSearchedVideoId(prev => ({
+        ...prev,
+        id: "",
+        type: SeachedVideoType.default,
+      }));
+    }
     navigate(-1);
   };
   const clickedMovie = movies?.find(
@@ -26,6 +38,7 @@ export default function ModalMovieDetailInfo({
       .map(x => genres?.find(genre => genre.id === x))
       .map(genre => genre?.name);
   };
+
   return (
     <>
       <Overlay

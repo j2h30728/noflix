@@ -3,15 +3,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useSetRecoilState } from "recoil";
-import { tvTypeState } from "../../recoil/atoms";
-import { ITvSlider } from "../../types/tv";
+import {
+  isSearchedModalOpenState,
+  searchedVideoIdState,
+  tvTypeState,
+} from "../../recoil/atoms";
+import { ITvSliderProps } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 import { queryGenresOfTvs } from "../../queries/tvs";
+import { SeachedVideoType } from "../../types/types";
 
-export default function TvSlider({ tvs, type }: ITvSlider) {
+export default function TvSlider({ tvs, type }: ITvSliderProps) {
   const offest = 5;
   const navigate = useNavigate();
   const setTvtype = useSetRecoilState(tvTypeState);
+  const setIsSearchedModalOpen = useSetRecoilState(isSearchedModalOpenState);
+  const setSearchedVideoId = useSetRecoilState(searchedVideoIdState);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isBack, setIsBack] = useState<Boolean>();
@@ -36,7 +43,17 @@ export default function TvSlider({ tvs, type }: ITvSlider) {
   };
   const handleBoxClick = (tvId: number) => {
     if (type) setTvtype(type);
-    navigate(`${tvId}`);
+    if (location.search) {
+      //서치된거 중에 클릭하면 저장
+      setSearchedVideoId(prev => ({
+        ...prev,
+        id: String(tvId),
+        type: SeachedVideoType.tv,
+      }));
+      setIsSearchedModalOpen(true);
+    } else {
+      navigate(`${tvId}`);
+    }
   };
   const genresOfTvs = queryGenresOfTvs();
   const genres = genresOfTvs.data?.genres;

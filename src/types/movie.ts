@@ -17,6 +17,7 @@ export enum movieType {
   latest = "latest",
   upcoming = "upcoming",
   top_rated = "top_rated",
+  searched = "searched",
 }
 export interface IModalMovieDetailProps {
   movies?: IMovie[];

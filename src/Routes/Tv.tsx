@@ -10,10 +10,10 @@ import {
 import { useRecoilValue } from "recoil";
 import { tvTypeState } from "../recoil/atoms";
 import { tvType } from "../types/tv";
-import TvSlider from "../components/Tv/TvSlider";
-import TvModalDetail from "../components/Tv/TvModalDetail";
-import TvBanner from "../components/Tv/TvBanner";
-import LatestTv from "../components/Tv/LatestTv";
+import TvSlider from "../components/tv/TvSlider";
+import TvModalDetail from "../components/tv/TvModalDetail";
+import TvBanner from "../components/tv/TvBanner";
+import LatestTv from "../components/tv/LatestTv";
 
 export default function Tv() {
   const modalMovieMatch = useMatch(`${baseURL}tvs/:tvId`);

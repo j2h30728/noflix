@@ -1,21 +1,39 @@
-import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { queryGenresOfTvs } from "../../queries/tvs";
 import { ITvModalDetailProps } from "../../types/tv";
+import {
+  isSearchedModalOpenState,
+  searchedVideoIdState,
+} from "../../recoil/atoms";
+import { useRecoilState } from "recoil";
+import { queryGenresOfTvs } from "../../queries/tvs";
 import { makeImagePath } from "../../utils/apiUtils";
+import styled from "styled-components";
+import { motion } from "framer-motion";
+import { SeachedVideoType } from "../../types/types";
 
-export default function TvModalDetail({
+export default function ModalSearchedTvDetailInfo({
   tvtype,
   tvs,
   tvId,
   scrollY,
 }: ITvModalDetailProps) {
-  const navigate = useNavigate();
+  const [searchedVideoId, setSearchedVideoId] =
+    useRecoilState(searchedVideoIdState);
+  const [isSearchedModalOpen, setIsSearchedModalOpen] = useRecoilState(
+    isSearchedModalOpenState
+  );
   const handleOverlayClick = () => {
-    navigate(-1);
+    if (searchedVideoId) {
+      setSearchedVideoId(prev => ({
+        ...prev,
+        id: "",
+        type: SeachedVideoType.default,
+      }));
+    }
+    if (isSearchedModalOpen) {
+      setIsSearchedModalOpen(false);
+    }
   };
-  const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId);
+  const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId + tvtype);
   const genresOfTvs = queryGenresOfTvs();
   const genres = genresOfTvs.data?.genres;
   const checkGen = (arr: number[]) => {
@@ -30,7 +48,7 @@ export default function TvModalDetail({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <Modal style={{ top: scrollY + 100 }} layoutId={tvId}>
+      <Modal style={{ top: scrollY + 100 }} layoutId={tvId + tvtype}>
         {clickedTv && (
           <>
             <ModalCover

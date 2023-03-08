@@ -16,14 +16,15 @@ export enum tvType {
   airing_today = "airing_today",
   latest = "latest",
   top_rated = "top_rated",
-}
-export interface ITvSlider {
-  tvs?: ITv[];
-  type?: tvType;
+  searched = "searched",
 }
 export interface ITvModalDetailProps {
   tvs?: ITv[];
   tvId?: string;
   scrollY: number;
   tvtype: string;
+}
+export interface ITvSliderProps {
+  tvs?: ITv[];
+  type?: tvType;
 }

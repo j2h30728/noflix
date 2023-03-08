@@ -1,17 +1,25 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../../utils/apiUtils";
 import { useSetRecoilState } from "recoil";
 import { IMovieSliderProps } from "../../types/movie";
-import { movieTypeState } from "../../recoil/atoms";
+import {
+  isSearchedModalOpenState,
+  movieTypeState,
+  searchedVideoIdState,
+} from "../../recoil/atoms";
 import { queryGenresOfMovies } from "../../queries/movies";
+import { SeachedVideoType } from "../../types/types";
 
 export default function MovieSlider({ movies, type }: IMovieSliderProps) {
   const offest = 5;
+  const location = useLocation();
   const navigate = useNavigate();
   const setMovietype = useSetRecoilState(movieTypeState);
+  const setIsSearchedModalOpen = useSetRecoilState(isSearchedModalOpenState);
+  const setSearchedVideoId = useSetRecoilState(searchedVideoIdState);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isBack, setIsBack] = useState<Boolean>();
@@ -36,7 +44,17 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
   };
   const handleBoxClick = (movieId: number) => {
     if (type) setMovietype(type);
-    navigate(`movies/${movieId}`);
+    if (location.search) {
+      //서치된거 중에 클릭하면 저장
+      setSearchedVideoId(prev => ({
+        ...prev,
+        id: String(movieId),
+        type: SeachedVideoType.movie,
+      }));
+      setIsSearchedModalOpen(true);
+    } else {
+      navigate(`movies/${movieId}`);
+    }
   };
 
   const genresOfMovies = queryGenresOfMovies();
