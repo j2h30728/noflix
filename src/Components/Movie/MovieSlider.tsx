@@ -1,6 +1,6 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../../utils/apiUtils";
 import { useSetRecoilState } from "recoil";
@@ -12,8 +12,14 @@ import {
 } from "../../recoil/atoms";
 import { queryGenresOfMovies } from "../../queries/movies";
 import { SeachedVideoType } from "../../types/types";
+import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
+import baseURL from "../../utils/baseURL";
 
 export default function MovieSlider({ movies, type }: IMovieSliderProps) {
+  const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
+  const { scrollY } = useScroll();
+  const movieId = isMatchedModalMovie?.params.movieId;
+
   const offest = 5;
   const location = useLocation();
   const navigate = useNavigate();
@@ -65,71 +71,83 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
       .map(genre => genre?.name);
   };
   return (
-    <Wrrapper>
-      <AnimatePresence
-        custom={isBack}
-        initial={false}
-        onExitComplete={toggleLeaving}>
-        <Row
+    <>
+      <Wrrapper>
+        <AnimatePresence
           custom={isBack}
-          initial="inital"
-          animate="center"
-          exit="exit"
-          variants={sliderVariants}
-          transition={{ type: "tween", duration: 1 }}
-          key={index}>
-          {movies &&
-            movies
-              .slice(1)
-              .slice(offest * index, offest * index + offest)
-              .map(movie => (
-                <Box
-                  layoutId={type && String(movie.id) + type}
-                  onClick={() => handleBoxClick(movie.id)}
-                  variants={boxVariants}
-                  initial="normal"
-                  whileHover="hover"
-                  transition={{ type: "tween" }}
-                  bgphoto={makeImagePath(movie.backdrop_path, "w500")}
-                  key={movie.id}>
-                  <motion.span variants={titleVariants}>
-                    {movie.title}
-                  </motion.span>
-                  <Info variants={infoVariants}>
-                    <h4>{movie.title}</h4>
-                    <InfoData>
-                      <p>{movie.release_date}</p>
-                      <p>⭐️{movie.vote_average}</p>
-                      <Genres>
-                        {checkGen(movie.genre_ids).map((genre, idx) => (
-                          <li key={idx}>{genre}</li>
-                        ))}
-                      </Genres>
-                    </InfoData>
-                  </Info>
-                </Box>
-              ))}
-        </Row>
+          initial={false}
+          onExitComplete={toggleLeaving}>
+          <Row
+            custom={isBack}
+            initial="inital"
+            animate="center"
+            exit="exit"
+            variants={sliderVariants}
+            transition={{ type: "tween", duration: 1 }}
+            key={index}>
+            {movies &&
+              movies
+                .slice(1)
+                .slice(offest * index, offest * index + offest)
+                .map(movie => (
+                  <Box
+                    layoutId={type && String(movie.id) + type}
+                    onClick={() => handleBoxClick(movie.id)}
+                    variants={boxVariants}
+                    initial="normal"
+                    whileHover="hover"
+                    transition={{ type: "tween" }}
+                    bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                    key={movie.id}>
+                    <motion.span variants={titleVariants}>
+                      {movie.title}
+                    </motion.span>
+                    <Info variants={infoVariants}>
+                      <h4>{movie.title}</h4>
+                      <InfoData>
+                        <p>{movie.release_date}</p>
+                        <p>⭐️{movie.vote_average}</p>
+                        <Genres>
+                          {checkGen(movie.genre_ids).map((genre, idx) => (
+                            <li key={idx}>{genre}</li>
+                          ))}
+                        </Genres>
+                      </InfoData>
+                    </Info>
+                  </Box>
+                ))}
+          </Row>
+        </AnimatePresence>
+        <LARR
+          onClick={decreaseIndex}
+          variants={arrowVariants}
+          initial="normal"
+          whileHover="hover"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512">
+          <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
+        </LARR>
+        <RARR
+          onClick={increaseIndex}
+          variants={arrowVariants}
+          initial="normal"
+          whileHover="hover"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 448 512">
+          <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
+        </RARR>
+      </Wrrapper>
+      <AnimatePresence>
+        {isMatchedModalMovie && type ? (
+          <ModalMovieDetailInfo
+            movietype={type}
+            movieId={movieId}
+            movies={movies}
+            scrollY={scrollY.get()}
+          />
+        ) : null}
       </AnimatePresence>
-      <LARR
-        onClick={decreaseIndex}
-        variants={arrowVariants}
-        initial="normal"
-        whileHover="hover"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512">
-        <path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L269.3 256 406.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z" />
-      </LARR>
-      <RARR
-        onClick={increaseIndex}
-        variants={arrowVariants}
-        initial="normal"
-        whileHover="hover"
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 448 512">
-        <path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L370.7 256 233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L178.7 256 41.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z" />
-      </RARR>
-    </Wrrapper>
+    </>
   );
 }
 const sliderVariants = {

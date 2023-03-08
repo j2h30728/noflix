@@ -1,8 +1,4 @@
-import { AnimatePresence, useScroll } from "framer-motion";
-import { useMatch } from "react-router-dom";
 import styled from "styled-components";
-import baseURL from "../utils/baseURL";
-import ModalMovieDetailInfo from "../components/movie/ModalMovieDetailInfo";
 import MovieSlider from "../components/movie/MovieSlider";
 import {
   queryLatestMovie,
@@ -10,21 +6,16 @@ import {
   queryTopRatedMovies,
   queryUpComingMovies,
 } from "../queries/movies";
-import { useRecoilValue } from "recoil";
-import { movieTypeState } from "../recoil/atoms";
+
 import { movieType } from "../types/movie";
 import LatestMovie from "../components/movie/LatestMovie";
 import MovieBanner from "../components/movie/MovieBanner";
 
 export default function Home() {
-  const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
-  const { scrollY } = useScroll();
-  const movieId = isMatchedModalMovie?.params.movieId;
   const nowPlaying = queryNowPlayingMovies();
   const latest = queryLatestMovie();
   const upComing = queryUpComingMovies();
   const topRated = queryTopRatedMovies();
-  const movietype = useRecoilValue(movieTypeState);
 
   return (
     <>
@@ -59,24 +50,6 @@ export default function Home() {
               movies={topRated.data?.results}
             />
           </SliderWrapper>
-          <AnimatePresence>
-            {isMatchedModalMovie ? (
-              <ModalMovieDetailInfo
-                movietype={movietype}
-                movieId={movieId}
-                movies={
-                  movietype === movieType.now_playing
-                    ? nowPlaying.data?.results
-                    : movietype === movieType.upcoming
-                    ? upComing.data?.results
-                    : movietype === movieType.top_rated
-                    ? topRated.data?.results
-                    : []
-                }
-                scrollY={scrollY.get()}
-              />
-            ) : null}
-          </AnimatePresence>
         </Container>
       )}
     </>

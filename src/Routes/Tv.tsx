@@ -1,28 +1,18 @@
-import { AnimatePresence, useScroll } from "framer-motion";
-import { useMatch } from "react-router-dom";
 import styled from "styled-components";
-import baseURL from "../utils/baseURL";
 import {
   queryLatestTvs,
   queryAiringTodayTvs,
   queryTopRatedTvs,
 } from "../queries/tvs";
-import { useRecoilValue } from "recoil";
-import { tvTypeState } from "../recoil/atoms";
 import { tvType } from "../types/tv";
 import TvSlider from "../components/tv/TvSlider";
-import TvModalDetail from "../components/tv/TvModalDetail";
 import TvBanner from "../components/tv/TvBanner";
 import LatestTv from "../components/tv/LatestTv";
 
 export default function Tv() {
-  const modalMovieMatch = useMatch(`${baseURL}tvs/:tvId`);
-  const { scrollY } = useScroll();
-  const tvId = modalMovieMatch?.params.tvId;
   const airingTody = queryAiringTodayTvs();
   const latest = queryLatestTvs();
   const topRated = queryTopRatedTvs();
-  const tvtype = useRecoilValue(tvTypeState);
   return (
     <>
       {airingTody.isLoading ? (
@@ -46,22 +36,6 @@ export default function Tv() {
             <Title>TopRated</Title>
             <TvSlider type={tvType.top_rated} tvs={topRated.data?.results} />
           </SliderWrapper>
-          <AnimatePresence>
-            {modalMovieMatch ? (
-              <TvModalDetail
-                tvtype={tvtype}
-                tvId={tvId + tvtype}
-                tvs={
-                  tvtype === tvType.airing_today
-                    ? airingTody.data?.results
-                    : tvtype === tvType.top_rated
-                    ? topRated.data?.results
-                    : []
-                }
-                scrollY={scrollY.get()}
-              />
-            ) : null}
-          </AnimatePresence>
         </Wrapper>
       )}
     </>
