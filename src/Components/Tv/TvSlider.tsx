@@ -97,9 +97,6 @@ export default function TvSlider({ tvs, type }: ITvSliderProps) {
                     transition={{ type: "tween" }}
                     bgphoto={makeImagePath(tv.backdrop_path, "w500")}
                     key={tv.id}>
-                    <motion.span variants={titleVariants}>
-                      {tv.name}
-                    </motion.span>
                     <Info variants={infoVariants}>
                       <h4>{tv.name}</h4>
                       <InfoData>
@@ -182,11 +179,6 @@ const infoVariants = {
     },
   },
 };
-const titleVariants = {
-  hover: {
-    opacity: 0,
-  },
-};
 const arrowVariants = {
   normal: {
     scale: 1,
@@ -217,7 +209,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: ${props => props.theme.black.lighter};
   height: 180px;
   width: 100%;
-  font-size: 30px;
   border-radius: 3px;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
@@ -233,13 +224,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   display: flex;
   align-items: end;
   justify-content: center;
-  span {
-    opacity: 0.6;
-    font-weight: 400;
-    font-size: 430;
-    color: whitesmoke;
-    margin-bottom: 20px;
-  }
 `;
 const Info = styled(motion.div)`
   padding: 10px;

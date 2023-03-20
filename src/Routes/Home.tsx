@@ -23,11 +23,11 @@ export default function Home() {
         <Loader>Loading...</Loader>
       ) : (
         <Container>
-          <MovieBanner movies={nowPlaying.data?.results[0]} />
+          <MovieBanner movie={nowPlaying.data?.results[0]} />
           <TopSliderWrapper>
             <Title>NOW PLAYING</Title>
             <MovieSlider
-              type={movieType.now_playing}
+              listType={movieType.now_playing}
               movies={nowPlaying.data?.results}
             />
           </TopSliderWrapper>
@@ -39,14 +39,14 @@ export default function Home() {
           <SliderWrapper>
             <Title>UPCOMING</Title>
             <MovieSlider
-              type={movieType.upcoming}
+              listType={movieType.upcoming}
               movies={upComing.data?.results}
             />
           </SliderWrapper>
           <SliderWrapper>
             <Title>TopRated</Title>
             <MovieSlider
-              type={movieType.top_rated}
+              listType={movieType.top_rated}
               movies={topRated.data?.results}
             />
           </SliderWrapper>

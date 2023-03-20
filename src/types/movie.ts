@@ -18,14 +18,17 @@ export enum movieType {
   upcoming = "upcoming",
   top_rated = "top_rated",
   searched = "searched",
+  default = "default",
 }
 export interface IModalMovieDetailProps {
   movies?: IMovie[];
-  scrollY: number;
-  movietype: string;
+  scrollY?: number;
+  listType: string;
   movieId?: string;
+  clickedListType: string;
+  setClickedListType: React.Dispatch<React.SetStateAction<movieType>>;
 }
 export interface IMovieSliderProps {
   movies?: IMovie[];
-  type?: movieType;
+  listType: movieType;
 }

@@ -30,6 +30,10 @@ const router = createBrowserRouter([
         path: "search",
         element: <Search />,
       },
+      {
+        path: "search/:movieId",
+        element: <Search />,
+      },
     ],
   },
 ]);

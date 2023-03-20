@@ -1,29 +1,43 @@
 import { useNavigate } from "react-router-dom";
-import { useRecoilState } from "recoil";
 import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { IBannerProps } from "../../types/types";
-import { movieTypeState } from "../../recoil/atoms";
 import { movieType } from "../../types/movie";
+import { useState } from "react";
+import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
 
-export default function MovieBanner({ movies }: IBannerProps) {
+export default function MovieBanner({ movie }: IBannerProps) {
   const navigate = useNavigate();
-  const [movieBannerType, setMovieBannerType] = useRecoilState(movieTypeState);
-  const handleBoxClick = (videoId: number) => {
-    setMovieBannerType(movieType.now_playing);
-    navigate(`${baseURL}movies/${videoId}`);
+  const handleBoxClick = (movieId: number) => {
+    setClickedListType(movieType.now_playing);
+    navigate(`${baseURL}movies/${movieId}`);
   };
+  const [clickedListType, setClickedListType] = useState<movieType>(
+    movieType.default
+  );
+
   return (
-    <Container bgphoto={makeImagePath(`${movies?.backdrop_path || ""}`)}>
+    <Container bgphoto={makeImagePath(`${movie?.backdrop_path || ""}`)}>
       <InfoBtn
-        layoutId={String(movies?.id) + movieBannerType}
-        onClick={() => handleBoxClick(movies?.id || 0)}>
+        layoutId={String(movie?.id) + movieType.now_playing}
+        onClick={() => handleBoxClick(movie?.id || 0)}>
         More info
       </InfoBtn>
-      <Title>{movies?.title}</Title>
-      <Overview>{movies?.overview}</Overview>
+      <Title>{movie?.title}</Title>
+      <Overview>{movie?.overview}</Overview>
+      <AnimatePresence>
+        {clickedListType !== movieType.default ? (
+          <ModalMovieDetailInfo
+            listType={movieType.now_playing}
+            clickedListType={movieType.now_playing}
+            movieId={movie?.id + clickedListType}
+            setClickedListType={setClickedListType}
+            movies={movie && [movie]}
+          />
+        ) : null}
+      </AnimatePresence>
     </Container>
   );
 }

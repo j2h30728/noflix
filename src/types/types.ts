@@ -32,8 +32,8 @@ export interface IGeLatest {
   poster_path?: string;
 }
 export interface IBannerProps {
-  movies?: IMovie;
-  tvs?: ITv;
+  movie?: IMovie;
+  tv?: ITv;
 }
 export interface ISearchForm {
   keyword: string;

@@ -2,35 +2,26 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { queryGenresOfMovies } from "../../queries/movies";
-import { IModalMovieDetailProps } from "../../types/movie";
+import { IModalMovieDetailProps, movieType } from "../../types/movie";
 import { makeImagePath } from "../../utils/apiUtils";
-import { useRecoilState } from "recoil";
-import { searchedVideoIdState } from "../../recoil/atoms";
-import { SeachedVideoType } from "../../types/types";
 
 export default function ModalMovieDetailInfo({
-  movietype,
+  listType,
   movies,
   movieId,
+  setClickedListType,
   scrollY,
 }: IModalMovieDetailProps) {
   const navigate = useNavigate();
-  const [searchedVideoId, setSearchedVideoId] =
-    useRecoilState(searchedVideoIdState);
+
   const handleOverlayClick = () => {
-    if (searchedVideoId.type) {
-      setSearchedVideoId(prev => ({
-        ...prev,
-        id: "",
-        type: SeachedVideoType.default,
-      }));
-    }
+    setClickedListType(movieType.default);
     navigate(-1);
   };
-  const clickedMovie = movies?.find(
-    movie => movie.id + movietype === movieId + movietype
-  );
 
+  const clickedMovie = movies?.find(
+    movie => String(movie.id) + listType === movieId
+  );
   const genresOfMovies = queryGenresOfMovies();
   const genres = genresOfMovies.data?.genres;
   const checkGen = (arr: number[]) => {
@@ -40,13 +31,13 @@ export default function ModalMovieDetailInfo({
   };
 
   return (
-    <>
+    <Conatiner>
       <Overlay
         onClick={handleOverlayClick}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       />
-      <Modal style={{ top: scrollY + 100 }} layoutId={movieId + movietype}>
+      <Modal layoutId={movieId}>
         {clickedMovie && (
           <>
             <ModalCover
@@ -88,19 +79,27 @@ export default function ModalMovieDetailInfo({
           </>
         )}
       </Modal>
-    </>
+    </Conatiner>
   );
 }
+const Conatiner = styled.div`
+  position: relative;
+  top: 0;
+`;
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  z-index: 1;
 `;
 const Modal = styled(motion.div)`
+  z-index: 50;
   position: absolute;
+  top: 0;
   width: 55vw;
   height: 80vh;
   left: 0;

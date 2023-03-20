@@ -3,31 +3,27 @@ import { useState } from "react";
 import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { makeImagePath } from "../../utils/apiUtils";
-import { useSetRecoilState } from "recoil";
-import { IMovieSliderProps } from "../../types/movie";
-import {
-  isSearchedModalOpenState,
-  movieTypeState,
-  searchedVideoIdState,
-} from "../../recoil/atoms";
+import { IMovieSliderProps, movieType } from "../../types/movie";
 import { queryGenresOfMovies } from "../../queries/movies";
-import { SeachedVideoType } from "../../types/types";
 import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
 import baseURL from "../../utils/baseURL";
 
-export default function MovieSlider({ movies, type }: IMovieSliderProps) {
-  const isMatchedModalMovie = useMatch(`${baseURL}movies/:movieId`);
+export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const { scrollY } = useScroll();
-  const movieId = isMatchedModalMovie?.params.movieId;
 
   const offest = 5;
   const location = useLocation();
   const navigate = useNavigate();
-  const setMovietype = useSetRecoilState(movieTypeState);
-  const setIsSearchedModalOpen = useSetRecoilState(isSearchedModalOpenState);
-  const setSearchedVideoId = useSetRecoilState(searchedVideoIdState);
+  const isMatchedModalMovie = useMatch(`/${baseURL}movies/:movieId`);
+  const movieId = isMatchedModalMovie?.params.movieId;
+  const isMatchedSearchModalMovie = useMatch(`/${baseURL}search/:movieId`);
+  const searchMovieId = isMatchedSearchModalMovie?.params.movieId;
+
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
+  const [clickedListType, setClickedListType] = useState<movieType>(
+    movieType.default
+  );
   const [isBack, setIsBack] = useState<Boolean>();
   const toggleLeaving = () => setLeaving(prev => !prev);
   const increaseIndex = () => {
@@ -48,16 +44,10 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
       setIndex(prev => (prev === maxIndex - 1 ? 0 : prev + 1));
     }
   };
-  const handleBoxClick = (movieId: number) => {
-    if (type) setMovietype(type);
+  const handleBoxClick = (movieId: number, listType: movieType) => {
+    setClickedListType(listType);
     if (location.search) {
-      //서치된거 중에 클릭하면 저장
-      setSearchedVideoId(prev => ({
-        ...prev,
-        id: String(movieId),
-        type: SeachedVideoType.movie,
-      }));
-      setIsSearchedModalOpen(true);
+      navigate(`${baseURL}search/${movieId}`);
     } else {
       navigate(`movies/${movieId}`);
     }
@@ -89,33 +79,32 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
               movies
                 .slice(1)
                 .slice(offest * index, offest * index + offest)
-                .map(movie => (
-                  <Box
-                    layoutId={type && String(movie.id) + type}
-                    onClick={() => handleBoxClick(movie.id)}
-                    variants={boxVariants}
-                    initial="normal"
-                    whileHover="hover"
-                    transition={{ type: "tween" }}
-                    bgphoto={makeImagePath(movie.backdrop_path, "w500")}
-                    key={movie.id}>
-                    <motion.span variants={titleVariants}>
-                      {movie.title}
-                    </motion.span>
-                    <Info variants={infoVariants}>
-                      <h4>{movie.title}</h4>
-                      <InfoData>
-                        <p>{movie.release_date}</p>
-                        <p>⭐️{movie.vote_average}</p>
-                        <Genres>
-                          {checkGen(movie.genre_ids).map((genre, idx) => (
-                            <li key={idx}>{genre}</li>
-                          ))}
-                        </Genres>
-                      </InfoData>
-                    </Info>
-                  </Box>
-                ))}
+                .map(movie => {
+                  return (
+                    <Box
+                      layoutId={String(movie.id) + listType}
+                      onClick={() => handleBoxClick(movie.id, listType)}
+                      variants={boxVariants}
+                      initial="normal"
+                      whileHover="hover"
+                      transition={{ type: "tween" }}
+                      bgphoto={makeImagePath(movie.backdrop_path, "w500")}
+                      key={movie.id}>
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                        <InfoData>
+                          <p>{movie.release_date}</p>
+                          <p>⭐️{movie.vote_average}</p>
+                          <Genres>
+                            {checkGen(movie.genre_ids).map((genre, idx) => (
+                              <li key={idx}>{genre}</li>
+                            ))}
+                          </Genres>
+                        </InfoData>
+                      </Info>
+                    </Box>
+                  );
+                })}
           </Row>
         </AnimatePresence>
         <LARR
@@ -138,10 +127,16 @@ export default function MovieSlider({ movies, type }: IMovieSliderProps) {
         </RARR>
       </Wrrapper>
       <AnimatePresence>
-        {isMatchedModalMovie && type ? (
+        {clickedListType !== movieType.default ? (
           <ModalMovieDetailInfo
-            movietype={type}
-            movieId={movieId}
+            listType={listType}
+            clickedListType={clickedListType}
+            setClickedListType={setClickedListType}
+            movieId={
+              movieId
+                ? movieId + clickedListType
+                : searchMovieId + clickedListType
+            }
             movies={movies}
             scrollY={scrollY.get()}
           />
@@ -184,11 +179,6 @@ const infoVariants = {
     },
   },
 };
-const titleVariants = {
-  hover: {
-    opacity: 0,
-  },
-};
 const arrowVariants = {
   normal: {
     scale: 1,
@@ -219,7 +209,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   background-color: ${props => props.theme.black.lighter};
   height: 180px;
   width: 100%;
-  font-size: 30px;
   border-radius: 3px;
   background-image: url(${props => props.bgphoto});
   background-size: cover;
@@ -235,13 +224,6 @@ const Box = styled(motion.div)<{ bgphoto: string }>`
   display: flex;
   align-items: end;
   justify-content: center;
-  span {
-    opacity: 0.6;
-    font-weight: 400;
-    font-size: 430;
-    color: whitesmoke;
-    margin-bottom: 20px;
-  }
 `;
 const Info = styled(motion.div)`
   padding: 10px;
