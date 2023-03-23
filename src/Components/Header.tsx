@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { ISearchForm } from "../types/types";
+import useDebounce from "../hooks/userDebounce";
 
 export default function Header() {
   const homeMatch = useMatch(`${baseURL}`);
@@ -13,7 +14,8 @@ export default function Header() {
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const navigate = useNavigate();
-  const { register, handleSubmit } = useForm<ISearchForm>();
+  const { register, handleSubmit, watch } = useForm<ISearchForm>();
+
   const handleSearch = ({ keyword }: ISearchForm) => {
     navigate(`${baseURL}search?keyword=${keyword}`);
   };
@@ -41,6 +43,15 @@ export default function Header() {
       }
     });
   }, [scrollY, navAnimation]);
+
+  //debounce
+  const { keyword } = watch();
+  const debouncedValue = useDebounce(keyword, 800);
+  useEffect(() => {
+    !debouncedValue
+      ? navigate(`${baseURL}`)
+      : navigate(`${baseURL}search?keyword=${debouncedValue}`);
+  }, [debouncedValue]);
 
   return (
     <Nav variants={navVriants} animate={navAnimation} initial="top">

@@ -4,7 +4,7 @@ import MovieSlider from "../components/movie/MovieSlider";
 import TvSlider from "../components/tv/TvSlider";
 import { querySearchedMovies } from "../queries/movies";
 import { querySearchedTvs } from "../queries/tvs";
-import { AnimatePresence, useScroll } from "framer-motion";
+import { useScroll } from "framer-motion";
 import { movieType } from "../types/movie";
 import { tvType } from "../types/tv";
 import { useEffect, useState } from "react";
@@ -20,6 +20,7 @@ export default function Search() {
   }, [keyword]);
   const searchedMovies = querySearchedMovies(settingKeyword);
   const searchedTvs = querySearchedTvs(settingKeyword);
+
   return (
     <Container>
       {searchedMovies.isLoading || searchedTvs.isLoading ? (
