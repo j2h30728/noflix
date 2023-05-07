@@ -19,11 +19,11 @@ export default function Tv() {
         <Loader>Loading...</Loader>
       ) : (
         <Wrapper>
-          <TvBanner tvs={airingTody.data?.results[0]} />
+          <TvBanner tv={airingTody.data?.results[0]} />
           <TopSliderWrapper>
             <Title>airing_today</Title>
             <TvSlider
-              type={tvType.airing_today}
+              listType={tvType.airing_today}
               tvs={airingTody.data?.results}
             />
           </TopSliderWrapper>
@@ -34,7 +34,10 @@ export default function Tv() {
           />
           <SliderWrapper>
             <Title>TopRated</Title>
-            <TvSlider type={tvType.top_rated} tvs={topRated.data?.results} />
+            <TvSlider
+              listType={tvType.top_rated}
+              tvs={topRated.data?.results}
+            />
           </SliderWrapper>
         </Wrapper>
       )}

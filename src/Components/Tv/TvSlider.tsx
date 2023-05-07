@@ -8,21 +8,24 @@ import {
   searchedVideoIdState,
   tvTypeState,
 } from "../../recoil/atoms";
-import { ITvSliderProps } from "../../types/tv";
+import { ITvSliderProps, tvType } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 import { queryGenresOfTvs } from "../../queries/tvs";
 import { SeachedVideoType } from "../../types/types";
 import TvModalDetail from "./TvModalDetail";
 import baseURL from "../../utils/baseURL";
 
-export default function TvSlider({ tvs, type }: ITvSliderProps) {
-  const isModalTvMatch = useMatch(`${baseURL}tvs/:tvId`);
+export default function TvSlider({ tvs, listType }: ITvSliderProps) {
+  const isModalTvMatch =
+    useMatch(`${baseURL}tvs/:listType/:tvId`) ||
+    useMatch(`${baseURL}search/:listType/:tvId`);
   const { scrollY } = useScroll();
   const tvId = isModalTvMatch?.params.tvId;
 
+  //슬라이드 애니메이션
   const offest = 5;
   const navigate = useNavigate();
-  const setTvtype = useSetRecoilState(tvTypeState);
+
   const setIsSearchedModalOpen = useSetRecoilState(isSearchedModalOpenState);
   const setSearchedVideoId = useSetRecoilState(searchedVideoIdState);
   const [index, setIndex] = useState(0);
@@ -48,19 +51,13 @@ export default function TvSlider({ tvs, type }: ITvSliderProps) {
     }
   };
   const handleBoxClick = (tvId: number) => {
-    if (type) setTvtype(type);
     if (location.search) {
-      //서치된거 중에 클릭하면 저장
-      setSearchedVideoId(prev => ({
-        ...prev,
-        id: String(tvId),
-        type: SeachedVideoType.tv,
-      }));
-      setIsSearchedModalOpen(true);
+      navigate(`${baseURL}search/${listType}/${tvId}`);
     } else {
-      navigate(`${tvId}`);
+      navigate(`tvs/${listType}/${tvId}`);
     }
   };
+
   const genresOfTvs = queryGenresOfTvs();
   const genres = genresOfTvs.data?.genres;
   const checkGen = (arr: number[]) => {
@@ -89,7 +86,7 @@ export default function TvSlider({ tvs, type }: ITvSliderProps) {
                 .slice(offest * index, offest * index + offest)
                 .map(tv => (
                   <Box
-                    layoutId={type && String(tv.id) + type}
+                    layoutId={String(tv.id) + listType}
                     onClick={() => handleBoxClick(tv.id)}
                     variants={boxVariants}
                     initial="normal"
@@ -104,7 +101,7 @@ export default function TvSlider({ tvs, type }: ITvSliderProps) {
                         <p>⭐️{tv.vote_average}</p>
                         <Genres>
                           {checkGen(tv.genre_ids).map((genre, idx) => (
-                            <li key={idx}>{genre}</li>
+                            <li key={idx + `${genre}`}>{genre}</li>
                           ))}
                         </Genres>
                       </InfoData>
@@ -133,13 +130,8 @@ export default function TvSlider({ tvs, type }: ITvSliderProps) {
         </RARR>
       </Wrrapper>
       <AnimatePresence>
-        {isModalTvMatch && type ? (
-          <TvModalDetail
-            tvtype={type}
-            tvId={tvId}
-            tvs={tvs}
-            scrollY={scrollY.get()}
-          />
+        {isModalTvMatch ? (
+          <TvModalDetail tvId={tvId} tvs={tvs} scrollY={scrollY.get()} />
         ) : null}
       </AnimatePresence>
     </>

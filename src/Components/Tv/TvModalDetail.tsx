@@ -6,7 +6,6 @@ import { ITvModalDetailProps } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 
 export default function TvModalDetail({
-  tvtype,
   tvs,
   tvId,
   scrollY,
@@ -15,7 +14,7 @@ export default function TvModalDetail({
   const handleOverlayClick = () => {
     navigate(-1);
   };
-  const clickedTv = tvs?.find(tv => tv.id + tvtype === tvId);
+  const clickedTv = tvs?.find(tv => String(tv.id) === tvId);
   const genresOfTvs = queryGenresOfTvs();
   const genres = genresOfTvs.data?.genres;
   const checkGen = (arr: number[]) => {

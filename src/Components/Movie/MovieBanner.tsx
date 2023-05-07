@@ -1,39 +1,35 @@
-import { useNavigate } from "react-router-dom";
+import { useMatch, useNavigate } from "react-router-dom";
 import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import { IBannerProps } from "../../types/types";
 import { movieType } from "../../types/movie";
-import { useState } from "react";
 import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
 
 export default function MovieBanner({ movie }: IBannerProps) {
+  const isMatchedBannerMovie =
+    useMatch(`/${baseURL}movies/:listType/:movieId`)?.params.listType ===
+    movieType.banner;
+
   const navigate = useNavigate();
   const handleBoxClick = (movieId: number) => {
-    setClickedListType(movieType.now_playing);
-    navigate(`${baseURL}movies/${movieId}`);
+    navigate(`${baseURL}movies/${movieType.banner}/${movieId}`);
   };
-  const [clickedListType, setClickedListType] = useState<movieType>(
-    movieType.default
-  );
-
   return (
     <Container bgphoto={makeImagePath(`${movie?.backdrop_path || ""}`)}>
       <InfoBtn
-        layoutId={String(movie?.id) + movieType.now_playing}
+        layoutId={movie?.id + movieType.banner}
         onClick={() => handleBoxClick(movie?.id || 0)}>
         More info
       </InfoBtn>
       <Title>{movie?.title}</Title>
       <Overview>{movie?.overview}</Overview>
       <AnimatePresence>
-        {clickedListType !== movieType.default ? (
+        {isMatchedBannerMovie ? (
           <ModalMovieDetailInfo
-            listType={movieType.now_playing}
-            clickedListType={movieType.now_playing}
-            movieId={movie?.id + clickedListType}
-            setClickedListType={setClickedListType}
+            listType={movieType.banner}
+            movieId={movie?.id + movieType.banner}
             movies={movie && [movie]}
           />
         ) : null}

@@ -9,13 +9,11 @@ export default function ModalMovieDetailInfo({
   listType,
   movies,
   movieId,
-  setClickedListType,
   scrollY,
 }: IModalMovieDetailProps) {
   const navigate = useNavigate();
 
   const handleOverlayClick = () => {
-    setClickedListType(movieType.default);
     navigate(-1);
   };
 
@@ -29,17 +27,16 @@ export default function ModalMovieDetailInfo({
       .map(x => genres?.find(genre => genre.id === x))
       .map(genre => genre?.name);
   };
-
   return (
     <Conatiner>
-      <Overlay
-        onClick={handleOverlayClick}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-      <Modal layoutId={movieId}>
-        {clickedMovie && (
-          <>
+      {clickedMovie ? (
+        <>
+          <Overlay
+            onClick={handleOverlayClick}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          <Modal layoutId={movieId}>
             <ModalCover
               bgphoto={makeImagePath(clickedMovie.backdrop_path, "w500")}>
               <MovieTitle>
@@ -76,9 +73,9 @@ export default function ModalMovieDetailInfo({
                 <p>{clickedMovie.overview}</p>
               </ContentWrapper>
             </ModalContent>
-          </>
-        )}
-      </Modal>
+          </Modal>
+        </>
+      ) : null}
     </Conatiner>
   );
 }

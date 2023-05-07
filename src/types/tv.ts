@@ -22,9 +22,8 @@ export interface ITvModalDetailProps {
   tvs?: ITv[];
   tvId?: string;
   scrollY: number;
-  tvtype: string;
 }
 export interface ITvSliderProps {
   tvs?: ITv[];
-  type?: tvType;
+  listType: tvType;
 }

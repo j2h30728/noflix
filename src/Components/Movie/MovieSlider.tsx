@@ -14,16 +14,16 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const offest = 5;
   const location = useLocation();
   const navigate = useNavigate();
-  const isMatchedModalMovie = useMatch(`/${baseURL}movies/:movieId`);
-  const movieId = isMatchedModalMovie?.params.movieId;
+  const isMatchedModalMovie = useMatch(`/${baseURL}movies/:listType/:movieId`);
+  const clickedMovieId = isMatchedModalMovie?.params.movieId;
+  const clickedListType = isMatchedModalMovie?.params.listType;
+
   const isMatchedSearchModalMovie = useMatch(`/${baseURL}search/:movieId`);
   const searchMovieId = isMatchedSearchModalMovie?.params.movieId;
 
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
-  const [clickedListType, setClickedListType] = useState<movieType>(
-    movieType.default
-  );
+
   const [isBack, setIsBack] = useState<Boolean>();
   const toggleLeaving = () => setLeaving(prev => !prev);
   const increaseIndex = () => {
@@ -45,11 +45,10 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
     }
   };
   const handleBoxClick = (movieId: number, listType: movieType) => {
-    setClickedListType(listType);
     if (location.search) {
       navigate(`${baseURL}search/${movieId}`);
     } else {
-      navigate(`movies/${movieId}`);
+      navigate(`movies/${listType}/${movieId}`);
     }
   };
 
@@ -127,14 +126,12 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
         </RARR>
       </Wrrapper>
       <AnimatePresence>
-        {clickedListType !== movieType.default ? (
+        {isMatchedModalMovie && clickedListType ? (
           <ModalMovieDetailInfo
-            listType={listType}
-            clickedListType={clickedListType}
-            setClickedListType={setClickedListType}
+            listType={clickedListType}
             movieId={
-              movieId
-                ? movieId + clickedListType
+              clickedMovieId
+                ? clickedMovieId + clickedListType
                 : searchMovieId + clickedListType
             }
             movies={movies}
