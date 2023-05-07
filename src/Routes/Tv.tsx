@@ -12,7 +12,7 @@ export default function Tv() {
       {airingTody.isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
-        <Wrapper>
+        <Container>
           <TvBanner tv={airingTody.data?.results[0]} />
           <TopSliderWrapper>
             <Title>airing_today</Title>
@@ -28,7 +28,7 @@ export default function Tv() {
               tvs={topRated.data?.results}
             />
           </SliderWrapper>
-        </Wrapper>
+        </Container>
       )}
     </>
   );
@@ -39,21 +39,18 @@ const Loader = styled.div`
   justify-content: center;
   align-items: center;
 `;
-const Wrapper = styled.div`
+const Container = styled.div`
   background-color: black;
   padding-bottom: 200px;
   display: flex;
   flex-direction: column;
 `;
 const TopSliderWrapper = styled.div`
-  position: relative;
-  margin: 0 30px;
-  top: -180px;
+  margin: -200px 30px 280px 30px;
 `;
 const SliderWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
   height: 300px;
   margin: 0 30px;
 `;

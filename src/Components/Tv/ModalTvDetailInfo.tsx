@@ -5,7 +5,8 @@ import { queryGenresOfTvs } from "../../queries/tvs";
 import { ITvModalDetailProps } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 
-export default function TvModalDetail({
+export default function ModalTvDetailInfo({
+  listType,
   tvs,
   tvId,
   scrollY,
@@ -14,7 +15,7 @@ export default function TvModalDetail({
   const handleOverlayClick = () => {
     navigate(-1);
   };
-  const clickedTv = tvs?.find(tv => String(tv.id) === tvId);
+  const clickedTv = tvs?.find(tv => String(tv.id) + listType === tvId);
   const genresOfTvs = queryGenresOfTvs();
   const genres = genresOfTvs.data?.genres;
   const checkGen = (arr: number[]) => {
@@ -24,14 +25,14 @@ export default function TvModalDetail({
   };
   return (
     <>
-      <Overlay
-        onClick={handleOverlayClick}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-      <Modal style={{ top: scrollY + 100 }} layoutId={tvId}>
-        {clickedTv && (
-          <>
+      {clickedTv && (
+        <>
+          <Overlay
+            onClick={handleOverlayClick}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
+          <Modal style={{ top: scrollY + 100 }} layoutId={tvId}>
             <ModalCover
               bgphoto={makeImagePath(clickedTv.backdrop_path, "w500")}>
               <MovieTitle>
@@ -68,22 +69,26 @@ export default function TvModalDetail({
                 <p>{clickedTv.overview}</p>
               </ContentWrapper>
             </ModalContent>
-          </>
-        )}
-      </Modal>
+          </Modal>
+        </>
+      )}
     </>
   );
 }
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   opacity: 0;
+  z-index: 1;
 `;
 const Modal = styled(motion.div)`
+  z-index: 50;
   position: absolute;
+  top: 0;
   width: 55vw;
   height: 80vh;
   left: 0;

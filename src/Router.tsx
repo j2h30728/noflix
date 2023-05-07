@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         element: <Tv />,
       },
       {
-        path: "tvs/:tvId",
+        path: "tvs/:listType/:tvId",
         element: <Tv />,
       },
       {
@@ -31,7 +31,7 @@ const router = createBrowserRouter([
         element: <Search />,
       },
       {
-        path: "search/:listType/:movieId",
+        path: "search/:listType/:videoId",
         element: <Search />,
       },
     ],

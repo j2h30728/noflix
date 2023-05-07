@@ -42,7 +42,7 @@ export default function Search() {
             {searchedTvs.data && searchedTvs.data.results.length > 0 ? (
               <TvSlider
                 tvs={searchedTvs.data?.results}
-                type={tvType.searched}
+                listType={tvType.searched}
               />
             ) : (
               <Notice>There are no matching data found.</Notice>

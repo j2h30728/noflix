@@ -1,33 +1,30 @@
 import { AnimatePresence, motion, useScroll } from "framer-motion";
 import { useState } from "react";
-import { useMatch, useNavigate } from "react-router-dom";
+import { useLocation, useMatch, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useSetRecoilState } from "recoil";
-import {
-  isSearchedModalOpenState,
-  searchedVideoIdState,
-  tvTypeState,
-} from "../../recoil/atoms";
 import { ITvSliderProps, tvType } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 import { queryGenresOfTvs } from "../../queries/tvs";
-import { SeachedVideoType } from "../../types/types";
-import TvModalDetail from "./TvModalDetail";
+import ModalTvDetailInfo from "./ModalTvDetailInfo";
 import baseURL from "../../utils/baseURL";
 
 export default function TvSlider({ tvs, listType }: ITvSliderProps) {
-  const isModalTvMatch =
-    useMatch(`${baseURL}tvs/:listType/:tvId`) ||
-    useMatch(`${baseURL}search/:listType/:tvId`);
   const { scrollY } = useScroll();
-  const tvId = isModalTvMatch?.params.tvId;
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isMatchedModalTv = useMatch(`/${baseURL}tvs/:listType/:tvId`);
+  const clickedTvId = isMatchedModalTv?.params.tvId;
+  const clickedListType = isMatchedModalTv?.params.listType;
+
+  const isMatchedSearchModalMovie = useMatch(
+    `/${baseURL}search/:listType/:videoId`
+  );
+  const searchTvId = isMatchedSearchModalMovie?.params.videoId;
+  const searchTvType = tvType.searched;
 
   //슬라이드 애니메이션
   const offest = 5;
-  const navigate = useNavigate();
-
-  const setIsSearchedModalOpen = useSetRecoilState(isSearchedModalOpenState);
-  const setSearchedVideoId = useSetRecoilState(searchedVideoIdState);
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const [isBack, setIsBack] = useState<Boolean>();
@@ -50,11 +47,11 @@ export default function TvSlider({ tvs, listType }: ITvSliderProps) {
       setIndex(prev => (prev === maxIndex - 1 ? 0 : prev + 1));
     }
   };
-  const handleBoxClick = (tvId: number) => {
+  const handleBoxClick = (tvId: number, listType: tvType) => {
     if (location.search) {
       navigate(`${baseURL}search/${listType}/${tvId}`);
     } else {
-      navigate(`tvs/${listType}/${tvId}`);
+      navigate(`${listType}/${tvId}`);
     }
   };
 
@@ -87,7 +84,7 @@ export default function TvSlider({ tvs, listType }: ITvSliderProps) {
                 .map(tv => (
                   <Box
                     layoutId={String(tv.id) + listType}
-                    onClick={() => handleBoxClick(tv.id)}
+                    onClick={() => handleBoxClick(tv.id, listType)}
                     variants={boxVariants}
                     initial="normal"
                     whileHover="hover"
@@ -130,9 +127,22 @@ export default function TvSlider({ tvs, listType }: ITvSliderProps) {
         </RARR>
       </Wrrapper>
       <AnimatePresence>
-        {isModalTvMatch ? (
-          <TvModalDetail tvId={tvId} tvs={tvs} scrollY={scrollY.get()} />
-        ) : null}
+        {isMatchedModalTv && clickedListType && (
+          <ModalTvDetailInfo
+            listType={clickedListType}
+            tvId={clickedTvId + clickedListType}
+            tvs={tvs}
+            scrollY={scrollY.get()}
+          />
+        )}
+        {isMatchedSearchModalMovie && (
+          <ModalTvDetailInfo
+            listType={searchTvType}
+            tvId={searchTvId + searchTvType}
+            tvs={tvs}
+            scrollY={scrollY.get()}
+          />
+        )}
       </AnimatePresence>
     </>
   );

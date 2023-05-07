@@ -1,29 +1,40 @@
-import { useNavigate } from "react-router-dom";
-import { tvTypeState } from "../../recoil/atoms";
+import { useMatch, useNavigate } from "react-router-dom";
 import { IBannerProps } from "../../types/types";
-import { useRecoilState } from "recoil";
 import { tvType } from "../../types/tv";
 import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import ModalTvDetailInfo from "./ModalTvDetailInfo";
 
-export default function TvBanner({ tvs }: IBannerProps) {
+export default function TvBanner({ tv }: IBannerProps) {
+  const isMatchedBannerMovie =
+    useMatch(`/${baseURL}movies/:listType/:tvId`)?.params.listType ===
+    tvType.banner;
+
   const navigate = useNavigate();
-  const [bannerTvType, setBannerTvType] = useRecoilState(tvTypeState);
   const handleBoxClick = (videoId: number) => {
-    setBannerTvType(tvType.airing_today);
-    navigate(`${baseURL}tvs/${videoId}`);
+    navigate(`${baseURL}tvs/${tvType.banner}/${videoId}`);
   };
   return (
-    <Container bgphoto={makeImagePath(`${tvs?.backdrop_path || ""}`)}>
+    <Container bgphoto={makeImagePath(`${tv?.backdrop_path || ""}`)}>
       <InfoBtn
-        layoutId={String(tvs?.id) + bannerTvType}
-        onClick={() => handleBoxClick(tvs?.id || 0)}>
+        layoutId={tv?.id + tvType.banner}
+        onClick={() => handleBoxClick(tv?.id || 0)}>
         More info
       </InfoBtn>
-      <Title>{tvs?.name}</Title>
-      <Overview>{tvs?.overview}</Overview>
+      <Title>{tv?.name}</Title>
+      <Overview>{tv?.overview}</Overview>
+      <AnimatePresence>
+        {isMatchedBannerMovie ? (
+          <ModalTvDetailInfo
+            listType={tvType.banner}
+            tvId={tv?.id + tvType.banner}
+            tvs={tv && [tv]}
+            scrollY={100}
+          />
+        ) : null}
+      </AnimatePresence>
     </Container>
   );
 }

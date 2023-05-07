@@ -16,8 +16,9 @@ export enum tvType {
   banner = "banner",
 }
 export interface ITvModalDetailProps {
-  tvs: ITv[];
+  tvs?: ITv[];
   tvId: string;
+  listType: string;
   scrollY: number;
 }
 export interface ITvSliderProps {

@@ -12,7 +12,6 @@ export default function ModalMovieDetailInfo({
   scrollY,
 }: IModalMovieDetailProps) {
   const navigate = useNavigate();
-
   const handleOverlayClick = () => {
     navigate(-1);
   };
@@ -27,7 +26,6 @@ export default function ModalMovieDetailInfo({
       .map(x => genres?.find(genre => genre.id === x))
       .map(genre => genre?.name);
   };
-  console.log("clickedMovie", clickedMovie);
   return (
     <>
       {clickedMovie && (

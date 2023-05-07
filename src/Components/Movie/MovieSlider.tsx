@@ -11,7 +11,6 @@ import baseURL from "../../utils/baseURL";
 export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const { scrollY } = useScroll();
 
-  const offest = 5;
   const location = useLocation();
   const navigate = useNavigate();
   const isMatchedModalMovie = useMatch(`/${baseURL}movies/:listType/:movieId`);
@@ -19,11 +18,12 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const clickedListType = isMatchedModalMovie?.params.listType;
 
   const isMatchedSearchModalMovie = useMatch(
-    `/${baseURL}search/:listType/:movieId`
+    `/${baseURL}search/:listType/:videoId`
   );
-  const searchMovieId = isMatchedSearchModalMovie?.params.movieId;
+  const searchMovieId = isMatchedSearchModalMovie?.params.videoId;
   const searchMovieType = movieType.searched;
 
+  const offest = 5;
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
 

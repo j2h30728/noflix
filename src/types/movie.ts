@@ -17,7 +17,7 @@ export enum movieType {
   banner = "banner",
 }
 export interface IModalMovieDetailProps {
-  movies: IMovie[];
+  movies?: IMovie[];
   scrollY: number;
   listType: string;
   movieId: string;
