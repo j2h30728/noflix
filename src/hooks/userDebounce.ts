@@ -5,11 +5,9 @@ export default function useDebounce(value: string, dealy: number = 500) {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      console.log("start");
       setDebouncedValue(value);
     }, dealy);
     return () => {
-      console.log("unmoute");
       clearTimeout(timer);
     };
   }, [value, dealy]);

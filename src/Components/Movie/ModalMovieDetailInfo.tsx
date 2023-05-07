@@ -27,16 +27,17 @@ export default function ModalMovieDetailInfo({
       .map(x => genres?.find(genre => genre.id === x))
       .map(genre => genre?.name);
   };
+  console.log("clickedMovie", clickedMovie);
   return (
-    <Conatiner>
-      {clickedMovie ? (
+    <>
+      {clickedMovie && (
         <>
           <Overlay
             onClick={handleOverlayClick}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           />
-          <Modal layoutId={movieId}>
+          <Modal style={{ top: scrollY + 100 }} layoutId={movieId}>
             <ModalCover
               bgphoto={makeImagePath(clickedMovie.backdrop_path, "w500")}>
               <MovieTitle>
@@ -75,14 +76,10 @@ export default function ModalMovieDetailInfo({
             </ModalContent>
           </Modal>
         </>
-      ) : null}
-    </Conatiner>
+      )}
+    </>
   );
 }
-const Conatiner = styled.div`
-  position: relative;
-  top: 0;
-`;
 const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;

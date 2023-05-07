@@ -1,19 +1,16 @@
 import styled from "styled-components";
 import MovieSlider from "../components/movie/MovieSlider";
 import {
-  queryLatestMovie,
   queryNowPlayingMovies,
   queryTopRatedMovies,
   queryUpComingMovies,
 } from "../queries/movies";
 
 import { movieType } from "../types/movie";
-import LatestMovie from "../components/movie/LatestMovie";
 import MovieBanner from "../components/movie/MovieBanner";
 
 export default function Home() {
   const nowPlaying = queryNowPlayingMovies();
-  const latest = queryLatestMovie();
   const upComing = queryUpComingMovies();
   const topRated = queryTopRatedMovies();
 
@@ -31,11 +28,6 @@ export default function Home() {
               movies={nowPlaying.data?.results}
             />
           </TopSliderWrapper>
-          <LatestMovie
-            title={latest.data?.title}
-            overview={latest.data?.overview}
-            poster_path={latest.data?.poster_path}
-          />
           <SliderWrapper>
             <Title>UPCOMING</Title>
             <MovieSlider
@@ -68,14 +60,11 @@ const Container = styled.div`
   flex-direction: column;
 `;
 const TopSliderWrapper = styled.div`
-  position: relative;
-  margin: 0 30px;
-  top: -180px;
+  margin: -200px 30px 280px 30px;
 `;
 const SliderWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
   height: 300px;
   margin: 0 30px;
 `;

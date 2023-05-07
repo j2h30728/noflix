@@ -14,7 +14,6 @@ export interface IGeLatesttMovie extends IGeLatest {
 }
 export enum movieType {
   now_playing = "now_playing",
-  latest = "latest",
   upcoming = "upcoming",
   top_rated = "top_rated",
   searched = "searched",
@@ -23,7 +22,7 @@ export enum movieType {
 }
 export interface IModalMovieDetailProps {
   movies?: IMovie[];
-  scrollY?: number;
+  scrollY: number;
   listType: string;
   movieId?: string;
 }

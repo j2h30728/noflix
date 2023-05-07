@@ -4,7 +4,6 @@ import MovieSlider from "../components/movie/MovieSlider";
 import TvSlider from "../components/tv/TvSlider";
 import { querySearchedMovies } from "../queries/movies";
 import { querySearchedTvs } from "../queries/tvs";
-import { useScroll } from "framer-motion";
 import { movieType } from "../types/movie";
 import { tvType } from "../types/tv";
 import { useEffect, useState } from "react";
@@ -12,7 +11,6 @@ import { useEffect, useState } from "react";
 export default function Search() {
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
-  const { scrollY } = useScroll();
   const [settingKeyword, setSettingKeyword] = useState<string | null>("");
 
   useEffect(() => {
@@ -32,7 +30,7 @@ export default function Search() {
             <Title>MOVIE</Title>
             {searchedMovies.data && searchedMovies.data.results.length > 0 ? (
               <MovieSlider
-                movies={searchedMovies.data?.results}
+                movies={searchedMovies.data.results}
                 listType={movieType.searched}
               />
             ) : (
@@ -71,7 +69,6 @@ const Title = styled.h2`
 const SliderWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
   height: 300px;
   margin: 0 30px;
 `;

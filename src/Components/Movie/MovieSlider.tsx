@@ -18,8 +18,11 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const clickedMovieId = isMatchedModalMovie?.params.movieId;
   const clickedListType = isMatchedModalMovie?.params.listType;
 
-  const isMatchedSearchModalMovie = useMatch(`/${baseURL}search/:movieId`);
+  const isMatchedSearchModalMovie = useMatch(
+    `/${baseURL}search/:listType/:movieId`
+  );
   const searchMovieId = isMatchedSearchModalMovie?.params.movieId;
+  const searchMovieType = movieType.searched;
 
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
@@ -46,7 +49,7 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   };
   const handleBoxClick = (movieId: number, listType: movieType) => {
     if (location.search) {
-      navigate(`${baseURL}search/${movieId}`);
+      navigate(`${baseURL}search/${listType}/${movieId}`);
     } else {
       navigate(`movies/${listType}/${movieId}`);
     }
@@ -126,18 +129,22 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
         </RARR>
       </Wrrapper>
       <AnimatePresence>
-        {isMatchedModalMovie && clickedListType ? (
+        {isMatchedModalMovie && clickedListType && (
           <ModalMovieDetailInfo
             listType={clickedListType}
-            movieId={
-              clickedMovieId
-                ? clickedMovieId + clickedListType
-                : searchMovieId + clickedListType
-            }
+            movieId={clickedMovieId + clickedListType}
             movies={movies}
             scrollY={scrollY.get()}
           />
-        ) : null}
+        )}
+        {isMatchedSearchModalMovie && (
+          <ModalMovieDetailInfo
+            listType={searchMovieType}
+            movieId={searchMovieId + searchMovieType}
+            movies={movies}
+            scrollY={scrollY.get()}
+          />
+        )}
       </AnimatePresence>
     </>
   );

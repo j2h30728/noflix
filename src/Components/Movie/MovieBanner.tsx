@@ -31,6 +31,7 @@ export default function MovieBanner({ movie }: IBannerProps) {
             listType={movieType.banner}
             movieId={movie?.id + movieType.banner}
             movies={movie && [movie]}
+            scrollY={100}
           />
         ) : null}
       </AnimatePresence>
