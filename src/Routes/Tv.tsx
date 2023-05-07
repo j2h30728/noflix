@@ -1,17 +1,11 @@
 import styled from "styled-components";
-import {
-  queryLatestTvs,
-  queryAiringTodayTvs,
-  queryTopRatedTvs,
-} from "../queries/tvs";
+import { queryAiringTodayTvs, queryTopRatedTvs } from "../queries/tvs";
 import { tvType } from "../types/tv";
 import TvSlider from "../components/tv/TvSlider";
 import TvBanner from "../components/tv/TvBanner";
-import LatestTv from "../components/tv/LatestTv";
 
 export default function Tv() {
   const airingTody = queryAiringTodayTvs();
-  const latest = queryLatestTvs();
   const topRated = queryTopRatedTvs();
   return (
     <>
@@ -27,11 +21,6 @@ export default function Tv() {
               tvs={airingTody.data?.results}
             />
           </TopSliderWrapper>
-          <LatestTv
-            name={latest.data?.name}
-            overview={latest.data?.name}
-            poster_path={latest.data?.overview}
-          />
           <SliderWrapper>
             <Title>TopRated</Title>
             <TvSlider

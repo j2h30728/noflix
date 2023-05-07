@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getGenresOfTvs, getTvs, searchTvs } from "../api/tv";
-import { IGeLatesttTv, IGetTvs, tvType } from "../types/tv";
+import { IGetTvs, tvType } from "../types/tv";
 import { IGetGenres } from "../types/types";
 
 export function queryAiringTodayTvs() {
@@ -8,11 +8,7 @@ export function queryAiringTodayTvs() {
     getTvs(tvType.airing_today)
   );
 }
-export function queryLatestTvs() {
-  return useQuery<IGeLatesttTv>(["tvs", tvType.latest], () =>
-    getTvs(tvType.latest)
-  );
-}
+
 export function queryTopRatedTvs() {
   return useQuery<IGetTvs>(["tvs", tvType.top_rated], () =>
     getTvs(tvType.top_rated)

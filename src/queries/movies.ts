@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getGenresOfMovies, getMovies, searchMovies } from "../api/movie";
-import { IGeLatesttMovie, IGetMovies, movieType } from "../types/movie";
+import { IGetMovies, movieType } from "../types/movie";
 import { IGetGenres } from "../types/types";
 
 export function queryNowPlayingMovies() {
@@ -8,11 +8,7 @@ export function queryNowPlayingMovies() {
     getMovies(movieType.now_playing)
   );
 }
-export function queryLatestMovie() {
-  return useQuery<IGeLatesttMovie>(["movies", movieType.latest], () =>
-    getMovies(movieType.latest)
-  );
-}
+
 export function queryUpComingMovies() {
   return useQuery<IGetMovies>(["movies", movieType.upcoming], () =>
     getMovies(movieType.upcoming)
