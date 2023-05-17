@@ -1,5 +1,4 @@
 import { useMatch, useNavigate } from "react-router-dom";
-import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,12 +8,12 @@ import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
 
 export default function MovieBanner({ movie }: IBannerProps) {
   const isMatchedBannerMovie =
-    useMatch(`/${baseURL}movies/:listType/:movieId`)?.params.listType ===
+    useMatch(`/movies/:listType/:movieId`)?.params.listType ===
     movieType.banner;
 
   const navigate = useNavigate();
   const handleBoxClick = (movieId: number) => {
-    navigate(`${baseURL}movies/${movieType.banner}/${movieId}`);
+    navigate(`movies/${movieType.banner}/${movieId}`);
   };
   return (
     <Container bgphoto={makeImagePath(`${movie?.backdrop_path || ""}`)}>

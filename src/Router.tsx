@@ -3,11 +3,10 @@ import App from "./App";
 import Home from "./Routes/Home";
 import Search from "./Routes/Search";
 import Tv from "./Routes/Tv";
-import baseURL from "./utils/baseURL";
 
 const router = createBrowserRouter([
   {
-    path: `${baseURL}/`,
+    path: `/`,
     element: <App />,
     children: [
       {

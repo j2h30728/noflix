@@ -6,20 +6,17 @@ import { ITvSliderProps, tvType } from "../../types/tv";
 import { makeImagePath } from "../../utils/apiUtils";
 import { queryGenresOfTvs } from "../../queries/tvs";
 import ModalTvDetailInfo from "./ModalTvDetailInfo";
-import baseURL from "../../utils/baseURL";
 
 export default function TvSlider({ tvs, listType }: ITvSliderProps) {
   const { scrollY } = useScroll();
 
   const location = useLocation();
   const navigate = useNavigate();
-  const isMatchedModalTv = useMatch(`/${baseURL}tvs/:listType/:tvId`);
+  const isMatchedModalTv = useMatch(`/tvs/:listType/:tvId`);
   const clickedTvId = isMatchedModalTv?.params.tvId;
   const clickedListType = isMatchedModalTv?.params.listType;
 
-  const isMatchedSearchModalMovie = useMatch(
-    `/${baseURL}search/:listType/:videoId`
-  );
+  const isMatchedSearchModalMovie = useMatch(`/search/:listType/:videoId`);
   const searchTvId = isMatchedSearchModalMovie?.params.videoId;
   const searchTvType = tvType.searched;
 
@@ -49,7 +46,7 @@ export default function TvSlider({ tvs, listType }: ITvSliderProps) {
   };
   const handleBoxClick = (tvId: number, listType: tvType) => {
     if (location.search) {
-      navigate(`${baseURL}search/${listType}/${tvId}`);
+      navigate(`/search/${listType}/${tvId}`);
     } else {
       navigate(`${listType}/${tvId}`);
     }

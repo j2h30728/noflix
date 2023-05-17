@@ -1,7 +1,6 @@
 import { motion, useAnimation, useScroll } from "framer-motion";
 import styled from "styled-components";
 import { useMatch, useNavigate } from "react-router-dom";
-import baseURL from "../utils/baseURL";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,15 +8,15 @@ import { ISearchForm } from "../types/types";
 import useDebounce from "../hooks/userDebounce";
 
 export default function Header() {
-  const homeMatch = useMatch(`${baseURL}`);
-  const tvMatch = useMatch(`${baseURL}tvs`);
+  const homeMatch = useMatch(`/`);
+  const tvMatch = useMatch(`/tvs`);
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const navigate = useNavigate();
   const { register, handleSubmit, watch } = useForm<ISearchForm>();
 
   const handleSearch = ({ keyword }: ISearchForm) => {
-    navigate(`${baseURL}search?keyword=${keyword}`);
+    navigate(`/search?keyword=${keyword}`);
   };
 
   const [searchOpen, setSearchOpen] = useState(false);
@@ -49,8 +48,8 @@ export default function Header() {
   const debouncedValue = useDebounce(keyword, 800);
   useEffect(() => {
     !debouncedValue
-      ? navigate(`${baseURL}`)
-      : navigate(`${baseURL}search?keyword=${debouncedValue}`);
+      ? navigate(`/`)
+      : navigate(`/search?keyword=${debouncedValue}`);
   }, [debouncedValue]);
 
   return (
@@ -68,7 +67,7 @@ export default function Header() {
         </Logo>
         <Items>
           <Item>
-            <Link to={`${baseURL}`}>Home</Link>
+            <Link to={`/`}>Home</Link>
             {homeMatch && <Circle layoutId="link" />}
           </Item>
           <Item>

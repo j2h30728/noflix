@@ -6,20 +6,17 @@ import { makeImagePath } from "../../utils/apiUtils";
 import { IMovieSliderProps, movieType } from "../../types/movie";
 import { queryGenresOfMovies } from "../../queries/movies";
 import ModalMovieDetailInfo from "./ModalMovieDetailInfo";
-import baseURL from "../../utils/baseURL";
 
 export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   const { scrollY } = useScroll();
 
   const location = useLocation();
   const navigate = useNavigate();
-  const isMatchedModalMovie = useMatch(`/${baseURL}movies/:listType/:movieId`);
+  const isMatchedModalMovie = useMatch(`/movies/:listType/:movieId`);
   const clickedMovieId = isMatchedModalMovie?.params.movieId;
   const clickedListType = isMatchedModalMovie?.params.listType;
 
-  const isMatchedSearchModalMovie = useMatch(
-    `/${baseURL}search/:listType/:videoId`
-  );
+  const isMatchedSearchModalMovie = useMatch(`/search/:listType/:videoId`);
   const searchMovieId = isMatchedSearchModalMovie?.params.videoId;
   const searchMovieType = movieType.searched;
 
@@ -49,7 +46,7 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   };
   const handleBoxClick = (movieId: number, listType: movieType) => {
     if (location.search) {
-      navigate(`${baseURL}search/${listType}/${movieId}`);
+      navigate(`search/${listType}/${movieId}`);
     } else {
       navigate(`movies/${listType}/${movieId}`);
     }

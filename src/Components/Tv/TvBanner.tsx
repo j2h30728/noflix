@@ -1,7 +1,6 @@
 import { useMatch, useNavigate } from "react-router-dom";
 import { IBannerProps } from "../../types/types";
 import { tvType } from "../../types/tv";
-import baseURL from "../../utils/baseURL";
 import { makeImagePath } from "../../utils/apiUtils";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,12 +8,11 @@ import ModalTvDetailInfo from "./ModalTvDetailInfo";
 
 export default function TvBanner({ tv }: IBannerProps) {
   const isMatchedBannerMovie =
-    useMatch(`/${baseURL}movies/:listType/:tvId`)?.params.listType ===
-    tvType.banner;
+    useMatch(`/movies/:listType/:tvId`)?.params.listType === tvType.banner;
 
   const navigate = useNavigate();
   const handleBoxClick = (videoId: number) => {
-    navigate(`${baseURL}tvs/${tvType.banner}/${videoId}`);
+    navigate(`tvs/${tvType.banner}/${videoId}`);
   };
   return (
     <Container bgphoto={makeImagePath(`${tv?.backdrop_path || ""}`)}>
