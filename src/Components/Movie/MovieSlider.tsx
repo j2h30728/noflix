@@ -46,7 +46,7 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   };
   const handleBoxClick = (movieId: number, listType: movieType) => {
     if (location.search) {
-      navigate(`search/${listType}/${movieId}`);
+      navigate(`${listType}/${movieId}`);
     } else {
       navigate(`movies/${listType}/${movieId}`);
     }

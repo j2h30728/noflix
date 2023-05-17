@@ -8,11 +8,11 @@ import ModalTvDetailInfo from "./ModalTvDetailInfo";
 
 export default function TvBanner({ tv }: IBannerProps) {
   const isMatchedBannerMovie =
-    useMatch(`/movies/:listType/:tvId`)?.params.listType === tvType.banner;
+    useMatch(`/tvs/:listType/:tvId`)?.params.listType === tvType.banner;
 
   const navigate = useNavigate();
   const handleBoxClick = (videoId: number) => {
-    navigate(`tvs/${tvType.banner}/${videoId}`);
+    navigate(`${tvType.banner}/${videoId}`);
   };
   return (
     <Container bgphoto={makeImagePath(`${tv?.backdrop_path || ""}`)}>

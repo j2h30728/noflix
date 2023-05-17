@@ -1,5 +1,3 @@
-import { queryGenresOfMovies } from "../queries/movies";
-
 export const BASE_PATH = "https://api.themoviedb.org/3";
 export const API_KEY = `08192788a8e5af154550148c8022e396`;
 
