@@ -37,7 +37,7 @@ export default function ModalMovieDetailInfo({
           />
           <Modal style={{ top: scrollY + 100 }} layoutId={movieId}>
             <ModalCover
-              bgphoto={makeImagePath(clickedMovie.backdrop_path, "w500")}>
+              imageUrl={makeImagePath(clickedMovie.backdrop_path, "w500")}>
               <MovieTitle>
                 {clickedMovie.title} <span>{clickedMovie.original_title}</span>
               </MovieTitle>
@@ -101,11 +101,11 @@ const Modal = styled(motion.div)`
   background-color: ${props => props.theme.black.lighter};
   overflow: hidden;
 `;
-const ModalCover = styled.div<{ bgphoto: string }>`
+const ModalCover = styled.div<{ imageUrl: string }>`
   width: 100%;
   height: 330px;
   background-image: linear-gradient(to top, black, transparent),
-    url(${props => props.bgphoto});
+    url(${props => props.imageUrl});
   background-size: cover;
   background-position: center center;
   border: none;

@@ -53,7 +53,7 @@ export default function Header() {
   }, [debouncedValue]);
 
   return (
-    <Nav variants={navVriants} animate={navAnimation} initial="top">
+    <Nav variants={navVariants} animate={navAnimation} initial="top">
       <Col>
         <Logo
           variants={logoVariants}
@@ -116,7 +116,7 @@ const logoVariants = {
   },
 };
 
-const navVriants = {
+const navVariants = {
   top: {
     backgroundColor: "rgba(0,0,0,0)",
   },

@@ -13,9 +13,9 @@ export async function searchMovies(keyword: string | null) {
   return await response.json();
 }
 export async function getGenresOfMovies() {
-  const reponse = await fetch(
+  const response = await fetch(
     `${BASE_PATH}/genre/movie/list?api_key=${API_KEY}
 `
   );
-  return await reponse.json();
+  return await response.json();
 }

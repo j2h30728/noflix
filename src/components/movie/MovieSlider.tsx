@@ -68,7 +68,7 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
           onExitComplete={toggleLeaving}>
           <Row
             custom={isBack}
-            initial="inital"
+            initial="initial"
             animate="center"
             exit="exit"
             variants={sliderVariants}
@@ -147,7 +147,7 @@ export default function MovieSlider({ movies, listType }: IMovieSliderProps) {
   );
 }
 const sliderVariants = {
-  inital: (isBack: boolean) => ({
+  initial: (isBack: boolean) => ({
     x: !isBack ? window.innerWidth + 5 : -window.innerWidth - 5,
   }),
   center: { x: 0 },

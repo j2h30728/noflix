@@ -45,12 +45,3 @@ export interface IGenres {
 export interface IGetGenres {
   genres: IGenres[];
 }
-export interface SeachedType {
-  id: string;
-  type: SeachedVideoType;
-}
-export enum SeachedVideoType {
-  default = "",
-  movie = "movie",
-  tv = "tv",
-}

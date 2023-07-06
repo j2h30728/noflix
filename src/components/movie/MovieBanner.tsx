@@ -16,7 +16,7 @@ export default function MovieBanner({ movie }: IBannerProps) {
     navigate(`movies/${movieType.banner}/${movieId}`);
   };
   return (
-    <Container bgphoto={makeImagePath(`${movie?.backdrop_path || ""}`)}>
+    <Container imgUrl={makeImagePath(`${movie?.backdrop_path || ""}`)}>
       <InfoBtn
         layoutId={movie?.id + movieType.banner}
         onClick={() => handleBoxClick(movie?.id || 0)}>
@@ -37,14 +37,14 @@ export default function MovieBanner({ movie }: IBannerProps) {
     </Container>
   );
 }
-const Container = styled.div<{ bgphoto: string }>`
+const Container = styled.div<{ imgUrl: string }>`
   height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 60px;
   background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 1)),
-    url(${props => props.bgphoto});
+    url(${props => props.imgUrl});
   background-size: cover;
   background-position: center center;
 `;
